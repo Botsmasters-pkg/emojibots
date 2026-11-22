@@ -1,0 +1,47 @@
+/*CMD
+  command: /save_text_content
+  help: 
+  need_reply: true
+  auto_retry_time: 
+  folder: 
+  answer: 
+  keyboard: 
+  aliases: 
+  group: 
+CMD*/
+
+var sc = Libs.emojiHelper.sc;
+
+if (!message) {
+  var sent = "<tg-emoji emoji-id='5870619152829386951'>❌</tg-emoji> <b>" + sc("PLEASE PROVIDE VALID TEXT CONTENT!") + "</b>";
+  Api.sendMessage({ chat_id: chat.chatid, text: sent, parse_mode: "html" });
+  Bot.run({ command: "/save_text_content" });
+  return;
+}
+
+var processed = Libs.emojiHelper.processTextAndEmojis(message);
+
+User.setProperty("current_post_data", {
+  id: Libs.emojiHelper.generate_id(),
+  content: processed,
+  buttons: [],
+  photo_id: null
+}, "json");
+
+var markup = {
+  inline_keyboard: [
+    [
+      { text: sc("ADD MEDIA"), callback_data: "media_yes", style: "success", icon_custom_emoji_id: "5429651785352501917" },
+      { text: sc("TEXT ONLY"), callback_data: "media_no", style: "primary", icon_custom_emoji_id: "5337310516769467285" }
+    ]
+  ]
+};
+
+var promptMedia = "<tg-emoji emoji-id='6154635564768300782'>📌</tg-emoji> <b>" + sc("DO YOU WANT TO ATTACH AN IMAGE MEDIA TO YOUR POST?") + "</b>";
+
+Api.sendMessage({
+  chat_id: chat.chatid,
+  text: promptMedia,
+  parse_mode: "html",
+  reply_markup: markup
+});
