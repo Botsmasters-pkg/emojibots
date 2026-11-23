@@ -11,9 +11,10 @@
 CMD*/
 
 var sc = Libs.emojiHelper.sc;
+var botUser = Libs.emojiHelper.get_bot_username();
 
 var msg = "<tg-emoji emoji-id='5429651785352501917'>↗️</tg-emoji> <b>" + sc("PLEASE FORWARD A MESSAGE FROM YOUR CHANNEL OR SEND @username:") + "</b>\n\n" +
-  "<i>• " + sc("Bot ko channel me admin banayein") + "\n" +
+  "<i>• " + sc("Bot") + " (<code>" + botUser + "</code>) " + sc("ko channel me admin banayein") + "\n" +
   "• " + sc("Aap khud bhi us channel ke Admin/Owner hone chahiye") + "</i>";
 
 Api.sendMessage({

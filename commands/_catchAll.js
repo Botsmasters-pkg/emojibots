@@ -123,6 +123,12 @@ if (typeof request !== "undefined" && request && typeof request.data === "string
 }
 
 if (typeof cbData === "string") {
+  // Handle Bot Token Sync callback
+  if (cbData === "sync_bot_identity") {
+    Bot.runCommand("sync_bot_identity");
+    return;
+  }
+
   // Handle Channel Control callbacks
   if (cbData === "admin_channel_control") {
     Bot.runCommand("admin_channel_control");

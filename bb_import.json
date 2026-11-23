@@ -93,6 +93,9 @@
     { "command": "/onCtrlDeleteDone", "help": "Delete message result callback", "file": "commands/onCtrlDeleteDone.js" },
     { "command": "admin_clean_db", "help": "Clear temporary posts database", "file": "commands/admin_clean_db.js" },
     { "command": "admin_export_users", "help": "Export registered user IDs list", "file": "commands/admin_export_users.js" },
+    { "command": "/onSyncBotIdentity", "help": "Background handler to auto-detect bot username, title, and ID from token", "file": "commands/onSyncBotIdentity.js" },
+    { "command": "sync_bot_identity", "aliases": "/sync_bot, /sync_token", "help": "Manually trigger Telegram Bot API getMe to sync bot identity from token", "file": "commands/sync_bot_identity.js" },
+    { "command": "/onSyncBotIdentityDone", "help": "Callback handler for manual sync of bot identity", "file": "commands/onSyncBotIdentityDone.js" },
     { "command": "/41", "aliases": "41, /clone, clone", "help": "Clone and install bot to user Bots.Business email", "file": "commands/_41.js" },
     { "command": "*", "help": "Catch-all command for dynamic send routing", "file": "commands/_catchAll.js" }
   ]

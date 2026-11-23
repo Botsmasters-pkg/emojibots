@@ -45,8 +45,13 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
      - ✉️ **Send Message:** Dispatch custom messages directly into the channel.
      - 🗑️ **Delete Message:** Delete any post by providing its Post Link or Message ID.
 
-6. **Owner Admin Suite (`8710308658`):**
-   - System Analytics & Status Dashboard.
+6. **Dynamic Cloned Bot Identity Auto-Detection:**
+   - Detects the bot's Telegram Username, Display Title, and Telegram ID automatically via `Api.getMe()` using whatever bot token is configured in Bots.Business.
+   - Allows users to clone the bot (via `/41` or repository clone), set their own token, and operate seamlessly under their own bot username without hardcoding or name conflicts.
+   - Includes manual one-click sync button in Admin Panel: `[ 🔄 SYNC BOT TOKEN ]`.
+
+7. **Owner Admin Suite (`8710308658`):**
+   - System Analytics & Status Dashboard (with live Bot Identity).
    - Text & Media Broadcast.
    - Add / Remove / List Text & Button Custom Emojis.
    - Multi-Type Force Join Channel Management (Public, Private, Request).
@@ -62,7 +67,7 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
    - Go to your bot settings ➡️ **Git**.
    - Connect your GitHub repository.
    - Tap **Sync**.
-3. All 78 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
+3. All 81 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
 
 ---
 👨‍💻 **Developer:** [@codevexa](https://t.me/codevexa)  

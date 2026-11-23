@@ -27,9 +27,10 @@ if (!targetChatId) {
 User.setProperty("current_ctrl_chat_id", targetChatId, "string");
 
 // Verify bot is currently admin in this channel before showing dashboard
+var botTgId = Libs.emojiHelper.get_bot_id() || bot.id;
 Api.getChatMember({
   chat_id: targetChatId,
-  user_id: bot.id,
+  user_id: botTgId,
   on_result: "/onCtrlVerifyBotAdmin",
   on_error: "/onCtrlVerifyBotAdmin"
 });

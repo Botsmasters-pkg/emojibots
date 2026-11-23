@@ -27,7 +27,13 @@ for (var k in userChannels) {
   connectedChannelsCount += (userChannels[k] || []).length;
 }
 
+var botUser = Libs.emojiHelper.get_bot_username();
+var botTitle = Libs.emojiHelper.get_bot_title();
+var botId = Libs.emojiHelper.get_bot_id() || (typeof bot !== "undefined" && bot ? bot.id : "N/A");
+
 var statusText = "<tg-emoji emoji-id='4956599758044005301'>📊</tg-emoji> <b>" + sc("DETAILED SYSTEM ANALYTICS & STATUS DASHBOARD:") + "</b>\n\n" +
+  "• **" + sc("Bot Identity") + "**: <code>" + botUser + "</code> (" + botTitle + ")\n" +
+  "• **" + sc("Bot Telegram ID") + "**: <code>" + botId + "</code>\n" +
   "• **" + sc("Total Registered Users") + "**: <code>" + users.length + "</code>\n" +
   "• **" + sc("Active Users / Session") + "**: <code>" + users.length + "</code>\n" +
   "• **" + sc("Forced Join Channels") + "**: <code>" + mustJoin.length + "</code>\n" +
@@ -42,5 +48,18 @@ Api.sendMessage({
   chat_id: chat.chatid,
   text: statusText,
   parse_mode: "html",
-  reply_markup: Libs.emojiHelper.admin_navigation_markup()
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: sc("🔄 SYNC BOT TOKEN"), callback_data: "sync_bot_identity", style: "primary", icon_custom_emoji_id: "5303040006347046717" }
+      ],
+      [
+        { text: sc("STEP BACK"), callback_data: "menu_admin_panel", style: "primary", icon_custom_emoji_id: "6154631793787015439" },
+        { text: sc("MAIN MENU"), callback_data: "back_to_main", style: "success", icon_custom_emoji_id: "5303040006347046717" }
+      ],
+      [
+        { text: sc("ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
+      ]
+    ]
+  }
 });

@@ -14,6 +14,14 @@ var sc = Libs.emojiHelper.sc;
 var adminId = "8710308658";
 Bot.setProperty("admin_id", adminId, "string");
 
+// Auto-detect bot identity from token if not yet synced or periodically
+if (!Bot.getProperty("bot_username") || !Bot.getProperty("bot_telegram_id")) {
+  Api.getMe({
+    on_result: "/onSyncBotIdentity",
+    on_error: "/onSyncBotIdentity"
+  });
+}
+
 var users = Bot.getProperty("users") || [];
 if (users.indexOf(user.telegramid) === -1) {
   users.push(user.telegramid);

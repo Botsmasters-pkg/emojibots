@@ -24,9 +24,10 @@ if (!cId) {
   return;
 }
 
+var botTgId = Libs.emojiHelper.get_bot_id() || bot.id;
 Api.getChatMember({
   chat_id: cId,
-  user_id: bot.id,
+  user_id: botTgId,
   on_result: "/onCtrlStatusResult",
   on_error: "/onCtrlStatusResult"
 });

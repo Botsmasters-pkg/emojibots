@@ -174,6 +174,23 @@ function normalizeChannel(ch) {
   return null;
 }
 
+function get_bot_username() {
+  var u = Bot.getProperty("bot_username");
+  if (u) return u;
+  if (typeof bot !== "undefined" && bot && bot.name) {
+    return "@" + bot.name.replace(/^@/, "");
+  }
+  return "@bot";
+}
+
+function get_bot_title() {
+  return Bot.getProperty("bot_title") || (typeof bot !== "undefined" && bot && bot.name ? bot.name : "Toxic Bot");
+}
+
+function get_bot_id() {
+  return Bot.getProperty("bot_telegram_id") || (typeof bot !== "undefined" && bot ? bot.id : null);
+}
+
 function get_welcome_text() {
   return "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("WELCOME TO TOXIC PREMIUM EMOJI & POST BUILDER BOT!") + "</b>\n\n" +
     "<b>" + sc("Is bot ki madad se aap apne normal text emojis ko high-quality animated custom emojis me badal sakte hain, aur khubsurat inline buttons wale posts bana kar apne channels par publish kar sakte hain.") + "</b>\n\n" +
@@ -190,6 +207,9 @@ publish({
   admin_keyboard: admin_keyboard,
   admin_navigation_markup: admin_navigation_markup,
   get_welcome_text: get_welcome_text,
+  get_bot_username: get_bot_username,
+  get_bot_title: get_bot_title,
+  get_bot_id: get_bot_id,
   DEFAULT_MUST_JOIN: DEFAULT_MUST_JOIN,
   DEFAULT_TEXT_EMOJIS: DEFAULT_TEXT_EMOJIS,
   DEFAULT_BUTTON_EMOJIS: DEFAULT_BUTTON_EMOJIS
