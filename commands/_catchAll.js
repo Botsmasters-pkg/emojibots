@@ -11,10 +11,22 @@
 CMD*/
 
 var sc = Libs.emojiHelper.sc;
-var cbData = (typeof data !== "undefined" && data) ? data : 
-             ((typeof request !== "undefined" && request && request.data) ? request.data : null);
 
-if (cbData && cbData.indexOf("send_") === 0) {
+// Extract callback_data safely as string
+var cbData = null;
+if (typeof request !== "undefined" && request && typeof request.data === "string") {
+  cbData = request.data;
+} else if (typeof params === "string" && params) {
+  cbData = params;
+}
+
+if (typeof cbData === "string" && cbData.indexOf("send_") === 0) {
+  if (typeof request !== "undefined" && request && request.id) {
+    try {
+      Api.answerCallbackQuery({ callback_query_id: request.id });
+    } catch (e) {}
+  }
+
   var parts = cbData.split("_");
   if (parts.length >= 3) {
     var pid = parts[1];

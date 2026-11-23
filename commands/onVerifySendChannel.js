@@ -32,12 +32,14 @@ if (!isChannelAdmin) {
   userChannels[user.telegramid] = updated;
   Bot.setProperty("user_channels", userChannels, "json");
 
-  if (request && request.id) {
-    Api.answerCallbackQuery({
-      callback_query_id: request.id,
-      text: sc("YOU ARE NOT ADMIN IN THIS CHANNEL!"),
-      show_alert: true
-    });
+  if (typeof request !== "undefined" && request && request.id) {
+    try {
+      Api.answerCallbackQuery({
+        callback_query_id: request.id,
+        text: sc("YOU ARE NOT ADMIN IN THIS CHANNEL!"),
+        show_alert: true
+      });
+    } catch (e) {}
   }
 
   var deniedText = "<tg-emoji emoji-id='5870619152829386951'>🚫</tg-emoji> <b>" + sc("YOU ARE NOT ADMIN IN THIS CHANNEL!") + "</b>\n\n" +
@@ -57,12 +59,14 @@ var postsDb = Bot.getProperty("posts_db") || {};
 var data = postsDb[pid];
 
 if (!data) {
-  if (request && request.id) {
-    Api.answerCallbackQuery({
-      callback_query_id: request.id,
-      text: "Post not found or expired.",
-      show_alert: true
-    });
+  if (typeof request !== "undefined" && request && request.id) {
+    try {
+      Api.answerCallbackQuery({
+        callback_query_id: request.id,
+        text: "Post not found or expired.",
+        show_alert: true
+      });
+    } catch (e) {}
   }
   return;
 }

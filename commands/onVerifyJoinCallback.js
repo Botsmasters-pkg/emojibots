@@ -47,8 +47,34 @@ if (isMember) {
   return;
 }
 
-Api.answerCallbackQuery({
-  callback_query_id: request.id,
-  text: sc("HAVEN'T JOINED YET! PLEASE JOIN ALL CHANNELS."),
-  show_alert: true
+if (typeof request !== "undefined" && request && request.id) {
+  try {
+    Api.answerCallbackQuery({
+      callback_query_id: request.id,
+      text: sc("HAVEN'T JOINED YET! PLEASE JOIN ALL CHANNELS."),
+      show_alert: true
+    });
+  } catch (e) {}
+}
+
+var rows = [];
+for (var i = 0; i < mustJoin.length; i++) {
+  var ch = mustJoin[i];
+  var url = ch.indexOf("http") === 0 ? ch : ("https://t.me/" + ch.replace("@", ""));
+  rows.push([
+    { text: "JOIN " + ch, url: url, style: "primary", icon_custom_emoji_id: "6154631793787015439" }
+  ]);
+}
+rows.push([
+  { text: sc("VERIFY JOIN"), callback_data: "check_join", style: "success", icon_custom_emoji_id: "6154718341672997377" }
+]);
+
+var notJoinedMsg = "<tg-emoji emoji-id='5870619152829386951'>😶</tg-emoji> <b>" + sc("ACCESS DENIED! PLEASE JOIN ALL REQUIRED CHANNELS TO UNLOCK FULL BOT FEATURES AND PREMIUM ACCESS.") + "</b>";
+
+Api.sendMessage({
+  chat_id: chat.chatid,
+  text: notJoinedMsg,
+  parse_mode: "html",
+  disable_web_page_preview: true,
+  reply_markup: { inline_keyboard: rows }
 });
