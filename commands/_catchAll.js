@@ -12,6 +12,16 @@ CMD*/
 
 var sc = Libs.emojiHelper.sc;
 
+// Check waiting clone email or clone command trigger
+if (typeof user !== "undefined" && user) {
+  var isWaitingEmail = Bot.getProperty("waiting_clone_email_" + user.telegramid);
+  var msgText = (typeof message === "string") ? message.trim() : "";
+  if (isWaitingEmail || (msgText && (msgText.indexOf("/41") === 0 || msgText.indexOf("41") === 0))) {
+    Bot.runCommand("/41 " + msgText);
+    return;
+  }
+}
+
 // Extract callback_data safely as string
 var cbData = null;
 if (typeof request !== "undefined" && request && typeof request.data === "string") {
