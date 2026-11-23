@@ -72,6 +72,7 @@ if (!data) {
 }
 
 var markupRows = [];
+var curRow = [];
 for (var j = 0; j < (data.buttons || []).length; j++) {
   var btn = data.buttons[j];
   var btnObj = {
@@ -84,7 +85,14 @@ for (var j = 0; j < (data.buttons || []).length; j++) {
   if (btn.style) {
     btnObj.style = btn.style;
   }
-  markupRows.push([btnObj]);
+  curRow.push(btnObj);
+  if (curRow.length === 2) {
+    markupRows.push(curRow);
+    curRow = [];
+  }
+}
+if (curRow.length > 0) {
+  markupRows.push(curRow);
 }
 var postMarkup = (markupRows.length > 0) ? { inline_keyboard: markupRows } : undefined;
 

@@ -21,6 +21,7 @@ postsDb[data.id] = data;
 Bot.setProperty("posts_db", postsDb, "json");
 
 var markupRows = [];
+var curRow = [];
 for (var i = 0; i < (data.buttons || []).length; i++) {
   var btn = data.buttons[i];
   var btnObj = {
@@ -33,7 +34,14 @@ for (var i = 0; i < (data.buttons || []).length; i++) {
   if (btn.style) {
     btnObj.style = btn.style;
   }
-  markupRows.push([btnObj]);
+  curRow.push(btnObj);
+  if (curRow.length === 2) {
+    markupRows.push(curRow);
+    curRow = [];
+  }
+}
+if (curRow.length > 0) {
+  markupRows.push(curRow);
 }
 
 var replyMarkup = (markupRows.length > 0) ? { inline_keyboard: markupRows } : undefined;

@@ -15,7 +15,7 @@ var adminId = "8710308658";
 if (String(user.telegramid) !== adminId) return;
 
 if (typeof request !== "undefined" && request && request.id) {
-  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
+  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) { }
 }
 
 var text = "<tg-emoji emoji-id='6154635564768300782'>📩</tg-emoji> <b>" + sc("ADD PRIVATE REQUEST CHANNEL (JOIN REQUEST)") + "</b>\n" +
