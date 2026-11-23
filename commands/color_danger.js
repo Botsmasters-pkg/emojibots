@@ -6,7 +6,7 @@
   folder: 
   answer: 
   keyboard: 
-  aliases: color_success, color_primary, color_skip
+  aliases: 
   group: 
 CMD*/
 
@@ -22,28 +22,27 @@ if (!postData) {
   return;
 }
 
-var cmd = command;
-var styleVal = null;
-if (cmd === "color_danger") styleVal = "danger";
-else if (cmd === "color_success") styleVal = "success";
-else if (cmd === "color_primary") styleVal = "primary";
+if (typeof request !== "undefined" && request && request.id) {
+  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
+}
 
 var name = User.getProperty("current_btn_name") || "Button";
 var url = User.getProperty("current_btn_url") || "";
-var iconId = User.getProperty("current_btn_icon") || null;
+var iconId = User.getProperty("current_btn_icon") || "5870869476408299692";
 
 var btnDict = {
   name: name,
   url: url,
+  style: "danger",
   icon_custom_emoji_id: iconId
 };
-if (styleVal) {
-  btnDict.style = styleVal;
-}
 
 postData.buttons = postData.buttons || [];
 postData.buttons.push(btnDict);
 User.setProperty("current_post_data", postData, "json");
+User.setProperty("current_btn_name", null, "string");
+User.setProperty("current_btn_url", null, "string");
+User.setProperty("current_btn_icon", null, "string");
 
 var addedMsg = "<tg-emoji emoji-id='6154718341672997377'>✔</tg-emoji> <b>" + sc("BUTTON ADDED SUCCESSFULLY!") + "</b> (Total: " + postData.buttons.length + ")";
 Api.sendMessage({

@@ -6,7 +6,7 @@
   folder: 
   answer: 
   keyboard: 
-  aliases: btn_done
+  aliases: 
   group: 
 CMD*/
 

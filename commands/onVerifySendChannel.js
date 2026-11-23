@@ -75,10 +75,12 @@ var markupRows = [];
 for (var j = 0; j < (data.buttons || []).length; j++) {
   var btn = data.buttons[j];
   var btnObj = {
-    text: btn.name,
-    url: btn.url,
-    icon_custom_emoji_id: btn.icon_custom_emoji_id
+    text: btn.name || "Button",
+    url: btn.url
   };
+  if (btn.icon_custom_emoji_id) {
+    btnObj.icon_custom_emoji_id = btn.icon_custom_emoji_id;
+  }
   if (btn.style) {
     btnObj.style = btn.style;
   }
