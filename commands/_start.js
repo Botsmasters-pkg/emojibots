@@ -20,15 +20,28 @@ if (users.indexOf(user.telegramid) === -1) {
   Bot.setProperty("users", users, "json");
 }
 
-var mustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var mustJoin = [];
+for (var i = 0; i < rawMustJoin.length; i++) {
+  var norm = Libs.emojiHelper.normalizeChannel(rawMustJoin[i]);
+  if (norm) mustJoin.push(norm);
+}
 
 if (mustJoin && mustJoin.length > 0) {
   User.setProperty("fsub_index", 0, "integer");
+  var firstCh = mustJoin[0];
+  
+  // If request channel and already requested
+  if (firstCh.type === "request" && Bot.getProperty("cjr_" + firstCh.id + "_" + user.telegramid)) {
+    Bot.runCommand("/onCheckJoinMember", { result: { status: "member" } });
+    return;
+  }
+
   Api.getChatMember({
-    chat_id: mustJoin[0],
+    chat_id: firstCh.id,
     user_id: user.telegramid,
     on_result: "/onCheckJoinMember",
-    on_error: "back_to_main"
+    on_error: "/onCheckJoinMember"
   });
   return;
 }

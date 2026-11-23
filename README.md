@@ -27,8 +27,11 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
      `<tg-emoji emoji-id='5870619152829386951'>🚫</tg-emoji> <b>YOU ARE NOT ADMIN IN THIS CHANNEL!</b>`
    - **Dynamic Re-Check on Send:** Re-checks user status before publishing. If admin was revoked, channel is automatically removed from user list!
 
-4. **Multi-Channel Mandatory Force Join:**
-   - Enforces joining `@botadminshere` and `@TOXIC_ADMINN` with verification screen.
+4. **Multi-Channel Mandatory Force Join (Public, Private, & Join Request):**
+   - Supports adding Public Channels (`@username` or link).
+   - Supports adding Private Channels (`-100...` Chat ID + Private Invite Link).
+   - Supports adding Private Request Channels (with Telegram `chat_join_request` automatic verification).
+   - Admin Panel management: Add / Remove / List force join channels with full details.
 
 5. **Owner Admin Suite (`8710308658`):**
    - System Analytics & Status Dashboard.
@@ -46,7 +49,7 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
    - Go to your bot settings ➡️ **Git**.
    - Connect your GitHub repository.
    - Tap **Sync**.
-3. All 52 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
+3. All 58 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
 
 ---
 👨‍💻 **Developer:** [@codevexa](https://t.me/codevexa)  

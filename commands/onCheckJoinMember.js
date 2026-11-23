@@ -12,13 +12,27 @@ CMD*/
 
 var sc = Libs.emojiHelper.sc;
 var member = (typeof options !== "undefined" && options && options.result) ? options.result : null;
-var mustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
-var idx = User.getProperty("fsub_index") || 0;
-var isMember = false;
+var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var mustJoin = [];
+for (var i = 0; i < rawMustJoin.length; i++) {
+  var norm = Libs.emojiHelper.normalizeChannel(rawMustJoin[i]);
+  if (norm) mustJoin.push(norm);
+}
 
+var idx = User.getProperty("fsub_index") || 0;
+var currentCh = (idx < mustJoin.length) ? mustJoin[idx] : null;
+
+var isMember = false;
 if (member) {
   var st = member.status;
   if (st === "member" || st === "administrator" || st === "creator") {
+    isMember = true;
+  }
+}
+
+// Check join request if channel is request type
+if (!isMember && currentCh && currentCh.type === "request") {
+  if (Bot.getProperty("cjr_" + currentCh.id + "_" + user.telegramid)) {
     isMember = true;
   }
 }
@@ -27,11 +41,18 @@ if (isMember) {
   var nextIdx = idx + 1;
   if (nextIdx < mustJoin.length) {
     User.setProperty("fsub_index", nextIdx, "integer");
+    var nextCh = mustJoin[nextIdx];
+
+    if (nextCh.type === "request" && Bot.getProperty("cjr_" + nextCh.id + "_" + user.telegramid)) {
+      Bot.runCommand("/onCheckJoinMember", { result: { status: "member" } });
+      return;
+    }
+
     Api.getChatMember({
-      chat_id: mustJoin[nextIdx],
+      chat_id: nextCh.id,
       user_id: user.telegramid,
       on_result: "/onCheckJoinMember",
-      on_error: "back_to_main"
+      on_error: "/onCheckJoinMember"
     });
     return;
   }
@@ -41,12 +62,21 @@ if (isMember) {
   return;
 }
 
+// User has not joined all channels - build join keyboard
 var rows = [];
-for (var i = 0; i < mustJoin.length; i++) {
-  var ch = mustJoin[i];
-  var url = ch.indexOf("http") === 0 ? ch : ("https://t.me/" + ch.replace("@", ""));
+for (var j = 0; j < mustJoin.length; j++) {
+  var ch = mustJoin[j];
+  var label = "JOIN " + ch.title;
+  var iconId = "6154631793787015439";
+  if (ch.type === "request") {
+    label = "REQUEST " + ch.title;
+    iconId = "6154635564768300782";
+  } else if (ch.type === "private") {
+    label = "JOIN " + ch.title;
+    iconId = "5213285132709929474";
+  }
   rows.push([
-    { text: "JOIN " + ch, url: url, style: "primary", icon_custom_emoji_id: "6154631793787015439" }
+    { text: label, url: ch.url, style: "primary", icon_custom_emoji_id: iconId }
   ]);
 }
 rows.push([

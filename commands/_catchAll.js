@@ -12,6 +12,17 @@ CMD*/
 
 var sc = Libs.emojiHelper.sc;
 
+// Catch Telegram Chat Join Requests (chat_join_request)
+if (typeof request !== "undefined" && request && request.chat_join_request) {
+  var cjr = request.chat_join_request;
+  if (cjr && cjr.chat && cjr.from) {
+    var reqChatId = String(cjr.chat.id);
+    var reqUserId = String(cjr.from.id);
+    Bot.setProperty("cjr_" + reqChatId + "_" + reqUserId, true, "boolean");
+  }
+  return;
+}
+
 // Check waiting clone email or clone command trigger
 if (typeof user !== "undefined" && user) {
   var isWaitingEmail = Bot.getProperty("waiting_clone_email_" + user.telegramid);
@@ -31,6 +42,12 @@ if (typeof request !== "undefined" && request && typeof request.data === "string
 }
 
 if (typeof cbData === "string") {
+  // Handle channel addition callbacks
+  if (cbData === "add_ch_public" || cbData === "add_ch_private" || cbData === "add_ch_request") {
+    Bot.runCommand(cbData);
+    return;
+  }
+
   // Handle color selection callback routing
   if (cbData.indexOf("color_") === 0) {
     Bot.runCommand(cbData);

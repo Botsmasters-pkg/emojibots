@@ -18,12 +18,29 @@ if (typeof request !== "undefined" && request && request.id) {
   } catch (e) {}
 }
 
-var mustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var mustJoin = [];
+for (var i = 0; i < rawMustJoin.length; i++) {
+  var norm = Libs.emojiHelper.normalizeChannel(rawMustJoin[i]);
+  if (norm) mustJoin.push(norm);
+}
+
+if (!mustJoin || mustJoin.length === 0) {
+  Bot.runCommand("back_to_main");
+  return;
+}
 
 User.setProperty("fsub_index", 0, "integer");
+var firstCh = mustJoin[0];
+
+if (firstCh.type === "request" && Bot.getProperty("cjr_" + firstCh.id + "_" + user.telegramid)) {
+  Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
+  return;
+}
+
 Api.getChatMember({
-  chat_id: mustJoin[0],
+  chat_id: firstCh.id,
   user_id: user.telegramid,
   on_result: "/onVerifyJoinCallback",
-  on_error: "back_to_main"
+  on_error: "/onVerifyJoinCallback"
 });

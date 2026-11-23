@@ -136,6 +136,41 @@ function admin_navigation_markup() {
   };
 }
 
+function normalizeChannel(ch) {
+  if (!ch) return null;
+  if (typeof ch === "string") {
+    var raw = ch.trim();
+    if (raw.indexOf("{") === 0) {
+      try {
+        var parsed = JSON.parse(raw);
+        return normalizeChannel(parsed);
+      } catch (e) {}
+    }
+    var isLink = raw.indexOf("http") === 0;
+    var username = raw.replace(/^@/, "").replace(/^https?:\/\/t\.me\//, "").replace(/\/$/, "");
+    var isId = (raw.indexOf("-100") === 0 || raw.indexOf("-") === 0);
+    return {
+      id: isId ? raw : (raw.indexOf("@") === 0 ? raw : ("@" + username)),
+      title: isId ? raw : (raw.indexOf("@") === 0 ? raw : ("@" + username)),
+      url: isLink ? raw : (isId ? "" : ("https://t.me/" + username)),
+      type: isId ? "private" : "public"
+    };
+  }
+  if (typeof ch === "object" && ch.id) {
+    var chId = String(ch.id).trim();
+    var chType = ch.type || (chId.indexOf("-100") === 0 ? "private" : "public");
+    var chUrl = ch.url ? String(ch.url).trim() : (chId.indexOf("@") === 0 ? ("https://t.me/" + chId.replace("@", "")) : "");
+    var chTitle = ch.title ? String(ch.title).trim() : chId;
+    return {
+      id: chId,
+      title: chTitle,
+      url: chUrl,
+      type: chType
+    };
+  }
+  return null;
+}
+
 function get_welcome_text() {
   return "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("WELCOME TO TOXIC PREMIUM EMOJI & POST BUILDER BOT!") + "</b>\n\n" +
     "<b>" + sc("Is bot ki madad se aap apne normal text emojis ko high-quality animated custom emojis me badal sakte hain, aur khubsurat inline buttons wale posts bana kar apne channels par publish kar sakte hain.") + "</b>\n\n" +
@@ -147,6 +182,7 @@ publish({
   generate_id: generate_id,
   is_emoji: is_emoji,
   processTextAndEmojis: processTextAndEmojis,
+  normalizeChannel: normalizeChannel,
   main_menu: main_menu,
   admin_keyboard: admin_keyboard,
   admin_navigation_markup: admin_navigation_markup,
