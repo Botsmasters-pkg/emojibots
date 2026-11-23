@@ -12,6 +12,83 @@ CMD*/
 
 var sc = Libs.emojiHelper.sc;
 
+// Catch Telegram My Chat Member updates (my_chat_member)
+// Triggered automatically when bot is added as admin or removed from any channel
+if (typeof request !== "undefined" && request && request.my_chat_member) {
+  var mcm = request.my_chat_member;
+  if (mcm && mcm.chat && mcm.new_chat_member) {
+    var cChat = mcm.chat;
+    var cNew = mcm.new_chat_member;
+    var cId = String(cChat.id);
+    var cTitle = cChat.title || cChat.username || ("Channel (" + cId.slice(-4) + ")");
+    var cUser = mcm.from;
+    var cUsername = cChat.username ? ("@" + cChat.username) : "";
+    var cLink = cUsername ? ("https://t.me/" + cChat.username) : ("https://t.me/c/" + cId.replace(/^-100/, ""));
+    var ADMIN_ID = 8710308658;
+
+    var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
+
+    if (cNew.status === "administrator") {
+      ctrlChannels[cId] = {
+        id: cId,
+        title: cTitle,
+        username: cUsername,
+        link: cLink,
+        can_promote_members: !!cNew.can_promote_members,
+        can_post_messages: !!cNew.can_post_messages,
+        can_edit_messages: !!cNew.can_edit_messages,
+        can_delete_messages: !!cNew.can_delete_messages,
+        can_invite_users: !!cNew.can_invite_users,
+        can_pin_messages: !!cNew.can_pin_messages,
+        can_change_info: !!cNew.can_change_info,
+        updated_at: new Date().toISOString()
+      };
+      Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+
+      var adminName = cUser ? (cUser.first_name ? cUser.first_name : (cUser.username ? "@" + cUser.username : "User")) : "Admin";
+      var adminNotice = "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("BOT PROMOTED AS ADMIN IN CHANNEL!") + "</b>\n" +
+                        "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                        "📢 <b>" + sc("Channel:") + "</b> <a href=\"" + cLink + "\">" + cTitle + "</a>\n" +
+                        "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n" +
+                        "👤 <b>" + sc("Added By:") + "</b> " + adminName + " (<code>" + (cUser ? cUser.id : "") + "</code>)\n" +
+                        "🔑 <b>" + sc("Add New Admins Right:") + "</b> " + (cNew.can_promote_members ? "✅ True" : "❌ False") + "\n\n" +
+                        "━━━━━━━━━━━━━━━━━━━━━━\n" +
+                        "👉 <i>" + sc("Aap ise Admin Panel ➡️ Channel Control se manage kar sakte hain.") + "</i>";
+
+      Api.sendMessage({
+        chat_id: ADMIN_ID,
+        text: adminNotice,
+        parse_mode: "html",
+        disable_web_page_preview: true,
+        reply_markup: {
+          inline_keyboard: [[
+            { text: sc("⚙️ MANAGE CHANNEL"), callback_data: "ctrl_ch_" + cId, style: "primary", icon_custom_emoji_id: "6154631793787015439" }
+          ]]
+        }
+      });
+    } else {
+      if (ctrlChannels[cId]) {
+        delete ctrlChannels[cId];
+        Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+
+        var removeNotice = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT REMOVED FROM CHANNEL ADMIN!") + "</b>\n" +
+                           "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                           "📢 <b>" + sc("Channel:") + "</b> <b>" + cTitle + "</b>\n" +
+                           "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n\n" +
+                           "━━━━━━━━━━━━━━━━━━━━━━\n" +
+                           "<i>" + sc("Yeh channel Channel Control panel se automatically remove kar diya gaya hai.") + "</i>";
+
+        Api.sendMessage({
+          chat_id: ADMIN_ID,
+          text: removeNotice,
+          parse_mode: "html"
+        });
+      }
+    }
+  }
+  return;
+}
+
 // Catch Telegram Chat Join Requests (chat_join_request)
 // Even if request is pending, save it so user is automatically approved/verified!
 if (typeof request !== "undefined" && request && request.chat_join_request) {
@@ -46,6 +123,22 @@ if (typeof request !== "undefined" && request && typeof request.data === "string
 }
 
 if (typeof cbData === "string") {
+  // Handle Channel Control callbacks
+  if (cbData === "admin_channel_control") {
+    Bot.runCommand("admin_channel_control");
+    return;
+  }
+
+  if (cbData.indexOf("ctrl_ch_") === 0) {
+    Bot.runCommand("ctrl_channel_view " + cbData.replace("ctrl_ch_", ""));
+    return;
+  }
+
+  if (cbData.indexOf("ctrl_act_") === 0) {
+    Bot.runCommand(cbData);
+    return;
+  }
+
   // Handle channel addition callbacks
   if (cbData === "add_ch_public" || cbData === "add_ch_private" || cbData === "add_ch_request") {
     Bot.runCommand(cbData);

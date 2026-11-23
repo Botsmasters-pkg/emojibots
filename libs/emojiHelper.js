@@ -112,6 +112,9 @@ function admin_keyboard() {
         { text: sc("REMOVE CHANNEL"), callback_data: "admin_remove_channel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
       ],
       [
+        { text: sc("📡 CHANNEL CONTROL"), callback_data: "admin_channel_control", style: "primary", icon_custom_emoji_id: "6154631793787015439" }
+      ],
+      [
         { text: sc("CLEAN DB"), callback_data: "admin_clean_db", style: "danger", icon_custom_emoji_id: "5870869476408299692" },
         { text: sc("EXPORT USERS"), callback_data: "admin_export_users", style: "primary", icon_custom_emoji_id: "6154659543570714696" }
       ],

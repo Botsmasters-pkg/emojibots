@@ -33,11 +33,24 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
    - Supports adding Private Request Channels (with Telegram `chat_join_request` automatic verification).
    - Admin Panel management: Add / Remove / List force join channels with full details.
 
-5. **Owner Admin Suite (`8710308658`):**
+5. **Channel Control Suite (Live Auto-Sync):**
+   - Automatically detects whenever the bot is promoted as an Administrator in any channel (`my_chat_member`).
+   - Sends real-time notification to the Bot Owner (`8710308658`) with clickable channel name and management button.
+   - Automatically cleans and removes channels if the bot is removed as admin.
+   - **Full Management per Channel:**
+     - 🔗 **Get Link:** Exports and displays direct channel invite link.
+     - 🛡️ **Status:** Shows live permissions checklist (`can_promote_members`, `can_post_messages`, etc.) with `true` / `false`.
+     - ⬆️ **Promote:** Promote any user to channel Administrator directly from the bot.
+     - ⬇️ **Demote:** Revoke admin rights from any administrator.
+     - ✉️ **Send Message:** Dispatch custom messages directly into the channel.
+     - 🗑️ **Delete Message:** Delete any post by providing its Post Link or Message ID.
+
+6. **Owner Admin Suite (`8710308658`):**
    - System Analytics & Status Dashboard.
    - Text & Media Broadcast.
    - Add / Remove / List Text & Button Custom Emojis.
-   - Add / Remove Mandatory Join Channels.
+   - Multi-Type Force Join Channel Management (Public, Private, Request).
+   - Channel Control Dashboard.
    - Clean Database & Export Users List.
 
 ---
@@ -49,7 +62,7 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
    - Go to your bot settings ➡️ **Git**.
    - Connect your GitHub repository.
    - Tap **Sync**.
-3. All 60 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
+3. All 78 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
 
 ---
 👨‍💻 **Developer:** [@codevexa](https://t.me/codevexa)  
