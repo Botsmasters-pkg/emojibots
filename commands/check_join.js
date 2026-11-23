@@ -33,9 +33,17 @@ if (!mustJoin || mustJoin.length === 0) {
 User.setProperty("fsub_index", 0, "integer");
 var firstCh = mustJoin[0];
 
-if (firstCh.type === "request" && Bot.getProperty("cjr_" + firstCh.id + "_" + user.telegramid)) {
-  Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
-  return;
+if (firstCh.type === "request") {
+  var cId = String(firstCh.id);
+  var cleanCId = cId.replace(/^-100/, "").replace(/^-/, "");
+  if (
+    Bot.getProperty("cjr_" + cId + "_" + user.telegramid) ||
+    Bot.getProperty("cjr_-100" + cleanCId + "_" + user.telegramid) ||
+    Bot.getProperty("cjr_" + cleanCId + "_" + user.telegramid)
+  ) {
+    Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
+    return;
+  }
 }
 
 Api.getChatMember({

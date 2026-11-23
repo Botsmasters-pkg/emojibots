@@ -20,16 +20,12 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var text = "<tg-emoji emoji-id='6154635564768300782'>📩</tg-emoji> <b>" + sc("ADD PRIVATE REQUEST CHANNEL (JOIN REQUEST)") + "</b>\n" +
   "━━━━━━━━━━━━━━━━━━━━━━\n" +
-  sc("Please send the Request Channel details in format:") + "\n" +
-  "<code>Chat ID | Invite Link | Channel Title</code>\n\n" +
-  "<b>" + sc("Example:") + "</b>\n" +
-  "<code>-1009876543210 | https://t.me/+ReqLink123 | VIP Request</code>\n\n" +
-  "<i>" + sc("Or without title:") + "</i>\n" +
-  "<code>-1009876543210 | https://t.me/+ReqLink123</code>\n\n" +
+  "<b>Step 1/2:</b> " + sc("Please send the Request Channel") + " <b>Chat ID</b>:\n\n" +
+  "<b>" + sc("Example:") + "</b> <code>-1009876543210</code>\n\n" +
   "⚠️ <b>" + sc("Crucial Requirements:") + "</b>\n" +
   "1. " + sc("Channel me 'Approve New Members' (Join Request) on hona chahiye.") + "\n" +
-  "2. " + sc("Bot MUST be an Administrator with 'Invite Users via Link' right.") + "\n" +
-  "3. " + sc("User jaise hi Request to Join dabayega, bot use automatically verify karega!");
+  "2. " + sc("Bot MUST be an Administrator in the channel.") + "\n" +
+  "3. " + sc("User ki request pending rahegi to bhi use verified mana jayega!");
 
 Api.sendMessage({
   chat_id: chat.chatid,
@@ -39,5 +35,5 @@ Api.sendMessage({
 });
 
 Bot.run({
-  command: "/save_request_channel"
+  command: "/save_request_step1"
 });

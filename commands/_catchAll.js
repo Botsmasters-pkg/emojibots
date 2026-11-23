@@ -13,12 +13,16 @@ CMD*/
 var sc = Libs.emojiHelper.sc;
 
 // Catch Telegram Chat Join Requests (chat_join_request)
+// Even if request is pending, save it so user is automatically approved/verified!
 if (typeof request !== "undefined" && request && request.chat_join_request) {
   var cjr = request.chat_join_request;
   if (cjr && cjr.chat && cjr.from) {
     var reqChatId = String(cjr.chat.id);
     var reqUserId = String(cjr.from.id);
     Bot.setProperty("cjr_" + reqChatId + "_" + reqUserId, true, "boolean");
+    var cleanChatId = reqChatId.replace(/^-100/, "").replace(/^-/, "");
+    Bot.setProperty("cjr_" + cleanChatId + "_" + reqUserId, true, "boolean");
+    Bot.setProperty("cjr_-100" + cleanChatId + "_" + reqUserId, true, "boolean");
   }
   return;
 }

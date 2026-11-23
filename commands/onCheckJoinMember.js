@@ -30,9 +30,15 @@ if (member) {
   }
 }
 
-// Check join request if channel is request type
+// For request channels: pending join request counts as APPROVED / VERIFIED!
 if (!isMember && currentCh && currentCh.type === "request") {
-  if (Bot.getProperty("cjr_" + currentCh.id + "_" + user.telegramid)) {
+  var cId = String(currentCh.id);
+  var cleanCId = cId.replace(/^-100/, "").replace(/^-/, "");
+  if (
+    Bot.getProperty("cjr_" + cId + "_" + user.telegramid) ||
+    Bot.getProperty("cjr_-100" + cleanCId + "_" + user.telegramid) ||
+    Bot.getProperty("cjr_" + cleanCId + "_" + user.telegramid)
+  ) {
     isMember = true;
   }
 }
@@ -43,9 +49,17 @@ if (isMember) {
     User.setProperty("fsub_index", nextIdx, "integer");
     var nextCh = mustJoin[nextIdx];
 
-    if (nextCh.type === "request" && Bot.getProperty("cjr_" + nextCh.id + "_" + user.telegramid)) {
-      Bot.runCommand("/onCheckJoinMember", { result: { status: "member" } });
-      return;
+    if (nextCh.type === "request") {
+      var nId = String(nextCh.id);
+      var cleanNId = nId.replace(/^-100/, "").replace(/^-/, "");
+      if (
+        Bot.getProperty("cjr_" + nId + "_" + user.telegramid) ||
+        Bot.getProperty("cjr_-100" + cleanNId + "_" + user.telegramid) ||
+        Bot.getProperty("cjr_" + cleanNId + "_" + user.telegramid)
+      ) {
+        Bot.runCommand("/onCheckJoinMember", { result: { status: "member" } });
+        return;
+      }
     }
 
     Api.getChatMember({
@@ -62,23 +76,37 @@ if (isMember) {
   return;
 }
 
-// User has not joined all channels - build join keyboard
+// Build 2x2 clickable JOIN buttons
 var rows = [];
+var row = [];
+
 for (var j = 0; j < mustJoin.length; j++) {
   var ch = mustJoin[j];
-  var label = "JOIN " + ch.title;
   var iconId = "6154631793787015439";
   if (ch.type === "request") {
-    label = "REQUEST " + ch.title;
     iconId = "6154635564768300782";
   } else if (ch.type === "private") {
-    label = "JOIN " + ch.title;
     iconId = "5213285132709929474";
   }
-  rows.push([
-    { text: label, url: ch.url, style: "primary", icon_custom_emoji_id: iconId }
-  ]);
+
+  row.push({
+    text: sc("JOIN"),
+    url: ch.url,
+    style: "primary",
+    icon_custom_emoji_id: iconId
+  });
+
+  if (row.length === 2) {
+    rows.push(row);
+    row = [];
+  }
 }
+
+if (row.length > 0) {
+  rows.push(row);
+}
+
+// Bottom Verify Join button
 rows.push([
   { text: sc("VERIFY JOIN"), callback_data: "check_join", style: "success", icon_custom_emoji_id: "6154718341672997377" }
 ]);

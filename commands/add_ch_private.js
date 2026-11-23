@@ -20,15 +20,9 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var text = "<tg-emoji emoji-id='5213285132709929474'>🔒</tg-emoji> <b>" + sc("ADD PRIVATE FORCE JOIN CHANNEL") + "</b>\n" +
   "━━━━━━━━━━━━━━━━━━━━━━\n" +
-  sc("Please send the Private Channel details in format:") + "\n" +
-  "<code>Chat ID | Invite Link | Channel Title</code>\n\n" +
-  "<b>" + sc("Example:") + "</b>\n" +
-  "<code>-1001234567890 | https://t.me/+AbCdEfGh | VIP Channel</code>\n\n" +
-  "<i>" + sc("Or without title:") + "</i>\n" +
-  "<code>-1001234567890 | https://t.me/+AbCdEfGh</code>\n\n" +
-  "⚠️ <b>" + sc("Important Notes:") + "</b>\n" +
-  "1. " + sc("Bot MUST be an Administrator in the private channel.") + "\n" +
-  "2. " + sc("Chat ID usually starts with -100 (e.g. -100xxxxxxxxxx).");
+  "<b>Step 1/2:</b> " + sc("Please send the Private Channel") + " <b>Chat ID</b>:\n\n" +
+  "<b>" + sc("Example:") + "</b> <code>-1001234567890</code>\n\n" +
+  "⚠️ <i>" + sc("Note: Channel ID -100 se shuru hona chahiye aur bot Administrator hona zaroori hai.") + "</i>";
 
 Api.sendMessage({
   chat_id: chat.chatid,
@@ -38,5 +32,5 @@ Api.sendMessage({
 });
 
 Bot.run({
-  command: "/save_private_channel"
+  command: "/save_private_step1"
 });

@@ -15,7 +15,7 @@ var adminId = "8710308658";
 if (String(user.telegramid) !== adminId) return;
 
 if (typeof request !== "undefined" && request && request.id) {
-  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
+  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) { }
 }
 
 var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
