@@ -104,6 +104,9 @@ if (row.length > 0) {
 
 // Navigation buttons
 rows.push([
+  { text: sc("➕ ADD / CONNECT CHANNEL"), callback_data: "ctrl_add_ch_prompt", style: "success", icon_custom_emoji_id: "6154718341672997377" }
+]);
+rows.push([
   { text: sc("🔄 REFRESH LIST"), callback_data: "admin_channel_control", style: "primary", icon_custom_emoji_id: "5303040006347046717" },
   { text: sc("ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
 ]);
@@ -120,6 +123,21 @@ var channelCountText = chKeys.length > 0
 var text = "<tg-emoji emoji-id='6154611916678369390'>📡</tg-emoji> <b>" + sc("CHANNEL CONTROL MANAGEMENT PANEL:") + "</b>\n" +
   "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
   channelCountText;
+
+var isCb = typeof request !== "undefined" && request && request.message && request.message.message_id;
+if (isCb) {
+  try {
+    Api.editMessageText({
+      chat_id: chat.chatid,
+      message_id: request.message.message_id,
+      text: text,
+      parse_mode: "html",
+      disable_web_page_preview: true,
+      reply_markup: { inline_keyboard: rows }
+    });
+    return;
+  } catch (e) {}
+}
 
 Api.sendMessage({
   chat_id: chat.chatid,

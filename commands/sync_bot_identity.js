@@ -22,3 +22,8 @@ Api.getMe({
   on_result: "/onSyncBotIdentityDone",
   on_error: "/onSyncBotIdentityDone"
 });
+
+Api.getWebhookInfo({
+  on_result: "/onEnsureWebhookAllowedUpdates",
+  on_error: "/onEnsureWebhookAllowedUpdates"
+});

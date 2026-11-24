@@ -22,6 +22,12 @@ if (!Bot.getProperty("bot_username") || !Bot.getProperty("bot_telegram_id")) {
   });
 }
 
+// Ensure webhook allows my_chat_member updates for auto-detecting admin channels
+Api.getWebhookInfo({
+  on_result: "/onEnsureWebhookAllowedUpdates",
+  on_error: "/onEnsureWebhookAllowedUpdates"
+});
+
 var users = Bot.getProperty("users") || [];
 if (users.indexOf(user.telegramid) === -1) {
   users.push(user.telegramid);

@@ -12,49 +12,69 @@ CMD*/
 
 var sc = Libs.emojiHelper.sc;
 
-// Catch Telegram My Chat Member updates (my_chat_member)
+// Catch Telegram My Chat Member updates (my_chat_member / chat_member)
 // Triggered automatically when bot is added as admin or removed from any channel
-if (typeof request !== "undefined" && request && request.my_chat_member) {
-  var mcm = request.my_chat_member;
-  if (mcm && mcm.chat && mcm.new_chat_member) {
-    var cChat = mcm.chat;
-    var cNew = mcm.new_chat_member;
-    var cId = String(cChat.id);
-    var cTitle = cChat.title || cChat.username || ("Channel (" + cId.slice(-4) + ")");
-    var cUser = mcm.from;
-    var cUsername = cChat.username ? ("@" + cChat.username) : "";
-    var cLink = cUsername ? ("https://t.me/" + cChat.username) : ("https://t.me/c/" + cId.replace(/^-100/, ""));
-    var ADMIN_ID = 8710308658;
+var mcm = null;
+if (typeof request !== "undefined" && request) {
+  if (request.my_chat_member) mcm = request.my_chat_member;
+  else if (request.chat_member) mcm = request.chat_member;
+  else if (typeof request === "string") {
+    try {
+      var parsedReq = JSON.parse(request);
+      if (parsedReq.my_chat_member) mcm = parsedReq.my_chat_member;
+      else if (parsedReq.chat_member) mcm = parsedReq.chat_member;
+    } catch (e) {}
+  }
+}
+if (!mcm && typeof tgUpdate !== "undefined" && tgUpdate) {
+  if (tgUpdate.my_chat_member) mcm = tgUpdate.my_chat_member;
+  else if (tgUpdate.chat_member) mcm = tgUpdate.chat_member;
+}
+if (!mcm && typeof options !== "undefined" && options) {
+  if (options.my_chat_member) mcm = options.my_chat_member;
+  else if (options.chat_member) mcm = options.chat_member;
+}
 
-    var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
+if (mcm && mcm.chat && mcm.new_chat_member) {
+  var cChat = mcm.chat;
+  var cNew = mcm.new_chat_member;
+  var cId = String(cChat.id);
+  var cTitle = cChat.title || cChat.username || ("Channel (" + cId.slice(-4) + ")");
+  var cUser = mcm.from;
+  var cUsername = cChat.username ? ("@" + cChat.username) : "";
+  var cLink = cUsername ? ("https://t.me/" + cChat.username) : ("https://t.me/c/" + cId.replace(/^-100/, ""));
+  var ADMIN_ID = Bot.getProperty("admin_id") || "8710308658";
 
-    if (cNew.status === "administrator") {
-      ctrlChannels[cId] = {
-        id: cId,
-        title: cTitle,
-        username: cUsername,
-        link: cLink,
-        can_promote_members: !!cNew.can_promote_members,
-        can_post_messages: !!cNew.can_post_messages,
-        can_edit_messages: !!cNew.can_edit_messages,
-        can_delete_messages: !!cNew.can_delete_messages,
-        can_invite_users: !!cNew.can_invite_users,
-        can_pin_messages: !!cNew.can_pin_messages,
-        can_change_info: !!cNew.can_change_info,
-        updated_at: new Date().toISOString()
-      };
-      Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+  var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
-      var adminName = cUser ? (cUser.first_name ? cUser.first_name : (cUser.username ? "@" + cUser.username : "User")) : "Admin";
-      var adminNotice = "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("BOT PROMOTED AS ADMIN IN CHANNEL!") + "</b>\n" +
-                        "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                        "📢 <b>" + sc("Channel:") + "</b> <a href=\"" + cLink + "\">" + cTitle + "</a>\n" +
-                        "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n" +
-                        "👤 <b>" + sc("Added By:") + "</b> " + adminName + " (<code>" + (cUser ? cUser.id : "") + "</code>)\n" +
-                        "🔑 <b>" + sc("Add New Admins Right:") + "</b> " + (cNew.can_promote_members ? "✅ True" : "❌ False") + "\n\n" +
-                        "━━━━━━━━━━━━━━━━━━━━━━\n" +
-                        "👉 <i>" + sc("Aap ise Admin Panel ➡️ Channel Control se manage kar sakte hain.") + "</i>";
+  if (cNew.status === "administrator") {
+    ctrlChannels[cId] = {
+      id: cId,
+      title: cTitle,
+      username: cUsername,
+      link: cLink,
+      can_promote_members: !!cNew.can_promote_members,
+      can_post_messages: !!cNew.can_post_messages,
+      can_edit_messages: !!cNew.can_edit_messages,
+      can_delete_messages: !!cNew.can_delete_messages,
+      can_invite_users: !!cNew.can_invite_users,
+      can_pin_messages: !!cNew.can_pin_messages,
+      can_change_info: !!cNew.can_change_info,
+      updated_at: new Date().toISOString()
+    };
+    Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
 
+    var adminName = cUser ? (cUser.first_name ? cUser.first_name : (cUser.username ? "@" + cUser.username : "User")) : "Admin";
+    var adminNotice = "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("BOT PROMOTED AS ADMIN IN CHANNEL!") + "</b>\n" +
+                      "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                      "📢 <b>" + sc("Channel:") + "</b> <a href=\"" + cLink + "\">" + cTitle + "</a>\n" +
+                      "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n" +
+                      "👤 <b>" + sc("Added By:") + "</b> " + adminName + " (<code>" + (cUser ? cUser.id : "") + "</code>)\n" +
+                      "🔑 <b>" + sc("Add New Admins Right:") + "</b> " + (cNew.can_promote_members ? "✅ True" : "❌ False") + "\n\n" +
+                      "━━━━━━━━━━━━━━━━━━━━━━\n" +
+                      "👉 <i>" + sc("Aap ise Admin Panel ➡️ Channel Control se manage kar sakte hain.") + "</i>";
+
+    try {
       Api.sendMessage({
         chat_id: ADMIN_ID,
         text: adminNotice,
@@ -66,27 +86,61 @@ if (typeof request !== "undefined" && request && request.my_chat_member) {
           ]]
         }
       });
-    } else {
-      if (ctrlChannels[cId]) {
-        delete ctrlChannels[cId];
-        Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+    } catch (e) {}
+  } else {
+    if (ctrlChannels[cId]) {
+      delete ctrlChannels[cId];
+      Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
 
-        var removeNotice = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT REMOVED FROM CHANNEL ADMIN!") + "</b>\n" +
-                           "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                           "📢 <b>" + sc("Channel:") + "</b> <b>" + cTitle + "</b>\n" +
-                           "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n\n" +
-                           "━━━━━━━━━━━━━━━━━━━━━━\n" +
-                           "<i>" + sc("Yeh channel Channel Control panel se automatically remove kar diya gaya hai.") + "</i>";
+      var removeNotice = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT REMOVED FROM CHANNEL ADMIN!") + "</b>\n" +
+                         "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                         "📢 <b>" + sc("Channel:") + "</b> <b>" + cTitle + "</b>\n" +
+                         "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n\n" +
+                         "━━━━━━━━━━━━━━━━━━━━━━\n" +
+                         "<i>" + sc("Yeh channel Channel Control panel se automatically remove kar diya gaya hai.") + "</i>";
 
+      try {
         Api.sendMessage({
           chat_id: ADMIN_ID,
           text: removeNotice,
           parse_mode: "html"
         });
-      }
+      } catch (e) {}
     }
   }
   return;
+}
+
+// Catch Telegram Channel Posts (channel_post)
+// Automatically registers any channel the bot is part of into Channel Control!
+var chPost = null;
+if (typeof request !== "undefined" && request && request.channel_post) chPost = request.channel_post;
+else if (typeof tgUpdate !== "undefined" && tgUpdate && tgUpdate.channel_post) chPost = tgUpdate.channel_post;
+
+if (chPost && chPost.chat) {
+  var cpChat = chPost.chat;
+  var cpId = String(cpChat.id);
+  var ctrlChs = Bot.getProperty("bot_controlled_channels") || {};
+  if (!ctrlChs[cpId]) {
+    var cpTitle = cpChat.title || cpChat.username || ("Channel (" + cpId.slice(-4) + ")");
+    var cpUname = cpChat.username ? ("@" + cpChat.username) : "";
+    var cpLnk = cpUname ? ("https://t.me/" + cpChat.username) : ("https://t.me/c/" + cpId.replace(/^-100/, ""));
+    ctrlChs[cpId] = {
+      id: cpId,
+      title: cpTitle,
+      username: cpUname,
+      link: cpLnk,
+      can_promote_members: true,
+      can_post_messages: true,
+      can_edit_messages: true,
+      can_delete_messages: true,
+      can_invite_users: true,
+      can_pin_messages: true,
+      can_change_info: true,
+      updated_at: new Date().toISOString()
+    };
+    Bot.setProperty("bot_controlled_channels", ctrlChs, "json");
+  }
 }
 
 // Catch Telegram Chat Join Requests (chat_join_request)
@@ -139,6 +193,11 @@ if (typeof cbData === "string") {
   // Handle Channel Control callbacks
   if (cbData === "admin_channel_control") {
     Bot.runCommand("admin_channel_control");
+    return;
+  }
+
+  if (cbData === "ctrl_add_ch_prompt") {
+    Bot.runCommand("ctrl_add_ch_prompt");
     return;
   }
 
