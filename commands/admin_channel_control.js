@@ -20,6 +20,61 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
+// Auto-sync channels from user_channels and must_join if not present
+var uChannels = Bot.getProperty("user_channels") || {};
+for (var uKey in uChannels) {
+  var chList = uChannels[uKey] || [];
+  for (var k = 0; k < chList.length; k++) {
+    var cItem = chList[k];
+    var cKey = String(cItem.id || cItem);
+    if (!ctrlChannels[cKey]) {
+      var isUn = cKey.indexOf("@") === 0;
+      var lnk = isUn ? ("https://t.me/" + cKey.replace("@", "")) : ("https://t.me/c/" + cKey.replace(/^-100/, ""));
+      ctrlChannels[cKey] = {
+        id: cKey,
+        title: cItem.title || cKey,
+        username: isUn ? cKey : "",
+        link: lnk,
+        can_promote_members: true,
+        can_post_messages: true,
+        can_edit_messages: true,
+        can_delete_messages: true,
+        can_invite_users: true,
+        can_pin_messages: true,
+        can_change_info: true,
+        updated_at: new Date().toISOString()
+      };
+    }
+  }
+}
+
+var mJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+for (var m = 0; m < mJoin.length; m++) {
+  var normCh = Libs.emojiHelper.normalizeChannel(mJoin[m]);
+  if (normCh && normCh.id) {
+    var mKey = String(normCh.id);
+    if (!ctrlChannels[mKey]) {
+      var isMUn = mKey.indexOf("@") === 0;
+      var mLnk = normCh.url || (isMUn ? ("https://t.me/" + mKey.replace("@", "")) : ("https://t.me/c/" + mKey.replace(/^-100/, "")));
+      ctrlChannels[mKey] = {
+        id: mKey,
+        title: normCh.title || mKey,
+        username: isMUn ? mKey : "",
+        link: mLnk,
+        can_promote_members: true,
+        can_post_messages: true,
+        can_edit_messages: true,
+        can_delete_messages: true,
+        can_invite_users: true,
+        can_pin_messages: true,
+        can_change_info: true,
+        updated_at: new Date().toISOString()
+      };
+    }
+  }
+}
+Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+
 // Build buttons list of active channels
 var chKeys = Object.keys(ctrlChannels);
 var rows = [];

@@ -50,6 +50,26 @@ if (!exists) {
   Bot.setProperty("user_channels", userChannels, "json");
 }
 
+var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
+var cleanId = String(target);
+var isUname = cleanId.indexOf("@") === 0;
+var cLink = isUname ? ("https://t.me/" + cleanId.replace("@", "")) : ("https://t.me/c/" + cleanId.replace(/^-100/, ""));
+ctrlChannels[cleanId] = {
+  id: cleanId,
+  title: cleanId,
+  username: isUname ? cleanId : "",
+  link: cLink,
+  can_promote_members: true,
+  can_post_messages: true,
+  can_edit_messages: true,
+  can_delete_messages: true,
+  can_invite_users: true,
+  can_pin_messages: true,
+  can_change_info: true,
+  updated_at: new Date().toISOString()
+};
+Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+
 var successText = "<tg-emoji emoji-id='6154718341672997377'>✔</tg-emoji> <b>" + sc("CHANNEL CONNECTED SUCCESSFULLY") + "</b>: " + target;
 
 Api.sendMessage({

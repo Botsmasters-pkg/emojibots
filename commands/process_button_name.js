@@ -13,12 +13,16 @@ CMD*/
 var sc = Libs.emojiHelper.sc;
 var postData = User.getProperty("current_post_data");
 if (!postData) {
-  Api.sendMessage({
-    chat_id: chat.chatid,
-    text: "<tg-emoji emoji-id='5870619152829386951'>❌</tg-emoji> <b>" + sc("Session expired! Please click MAKE POST to create a new post.") + "</b>",
-    parse_mode: "html",
-    reply_markup: Libs.emojiHelper.main_menu(user.telegramid)
-  });
+  if (message && message.indexOf("/") === 0) {
+    Bot.runCommand(message);
+    return;
+  }
+  return;
+}
+
+if (message && (message === "/start" || message === "/cancel" || message === "/admin")) {
+  User.setProperty("current_post_data", null, "json");
+  Bot.runCommand(message === "/cancel" ? "back_to_main" : message);
   return;
 }
 

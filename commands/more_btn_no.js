@@ -10,6 +10,16 @@
   group: 
 CMD*/
 
+if (typeof request !== "undefined" && request && request.id) {
+  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
+}
+
+var isFinalizing = User.getProperty("is_finalizing_post");
+if (isFinalizing) return;
+
+var lastPostTime = User.getProperty("last_post_created_time");
+if (lastPostTime && (Date.now() - lastPostTime < 4000)) return;
+
 var sc = Libs.emojiHelper.sc;
 var postData = User.getProperty("current_post_data");
 if (!postData) {

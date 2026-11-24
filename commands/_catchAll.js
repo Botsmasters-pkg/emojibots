@@ -123,6 +123,13 @@ if (typeof request !== "undefined" && request && typeof request.data === "string
 }
 
 if (typeof cbData === "string") {
+  // Always answer callback queries immediately to prevent Telegram client timeout / loading spinner
+  if (typeof request !== "undefined" && request && request.id) {
+    try {
+      Api.answerCallbackQuery({ callback_query_id: request.id });
+    } catch (e) {}
+  }
+
   // Handle Bot Token Sync callback
   if (cbData === "sync_bot_identity") {
     Bot.runCommand("sync_bot_identity");

@@ -14,6 +14,8 @@ var sc = Libs.emojiHelper.sc;
 var data = User.getProperty("current_post_data");
 if (!data) return;
 
+User.setProperty("is_finalizing_post", true, "boolean");
+User.setProperty("last_post_created_time", Date.now(), "integer");
 User.setProperty("current_post_data", null, "json");
 
 var postsDb = Bot.getProperty("posts_db") || {};
@@ -79,3 +81,5 @@ Api.sendMessage({
   parse_mode: "html",
   reply_markup: Libs.emojiHelper.main_menu(user.telegramid)
 });
+
+User.setProperty("is_finalizing_post", false, "boolean");
