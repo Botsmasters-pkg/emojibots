@@ -475,6 +475,31 @@
       "command": "/reset_fsub",
       "help": "Reset FSub verification status to test force join",
       "file": "commands/reset_fsub.js"
+    },
+    {
+      "command": "gate_check_step",
+      "help": "Live membership verification step for all entry points",
+      "file": "commands/gate_check_step.js"
+    },
+    {
+      "command": "/onGateCheckCallback",
+      "help": "Real-time verification callback for gate check",
+      "file": "commands/onGateCheckCallback.js"
+    },
+    {
+      "command": "exec_make_post",
+      "help": "Action to start post creation once verified",
+      "file": "commands/exec_make_post.js"
+    },
+    {
+      "command": "exec_connect_channels",
+      "help": "Action to start channel connection once verified",
+      "file": "commands/exec_connect_channels.js"
+    },
+    {
+      "command": "exec_send_channel",
+      "help": "Action to start channel dispatch once verified",
+      "file": "commands/exec_send_channel.js"
     }
   ]
 }

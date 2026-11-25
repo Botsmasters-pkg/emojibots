@@ -10,20 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
-var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
-var mustJoin = [];
-for (var i = 0; i < rawMustJoin.length; i++) {
-  var norm = Libs.emojiHelper.normalizeChannel(rawMustJoin[i]);
-  if (norm) mustJoin.push(norm);
-}
-
-if (mustJoin && mustJoin.length > 0) {
-  var isVerified = Libs.emojiHelper.isUserFsubVerified(user.telegramid, mustJoin);
-  if (!isVerified) {
-    Bot.runCommand("show_force_join");
-    return;
-  }
+if (typeof request !== "undefined" && request && request.id) {
+  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
 }
 
 var welcomeText = Libs.emojiHelper.get_welcome_text();
