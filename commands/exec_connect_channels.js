@@ -10,7 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 var botUser = Libs.emojiHelper.get_bot_username();
 
 var msg = "<tg-emoji emoji-id='5429651785352501917'>↗️</tg-emoji> <b>" + sc("PLEASE FORWARD A MESSAGE FROM YOUR CHANNEL OR SEND @username:") + "</b>\n\n" +

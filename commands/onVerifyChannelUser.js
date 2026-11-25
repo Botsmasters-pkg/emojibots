@@ -10,7 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 var target = User.getProperty("verifying_chat_id");
 var member = (typeof options !== "undefined" && options && options.result) ? options.result : null;
 

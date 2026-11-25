@@ -10,7 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 
 var msg = "<tg-emoji emoji-id='5337310516769467285'>📝</tg-emoji> <b>" + sc("PLEASE SEND YOUR TEXT CONTENT WITH NORMAL Emojis (wo automatic custom emojis me convert ho jayenge):") + "</b>";
 

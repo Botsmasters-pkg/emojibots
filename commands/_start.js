@@ -10,7 +10,6 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
 var adminId = "8710308658";
 Bot.setProperty("admin_id", adminId, "string");
 

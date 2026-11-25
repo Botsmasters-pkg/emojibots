@@ -20,7 +20,8 @@ if (isFinalizing) return;
 var lastPostTime = User.getProperty("last_post_created_time");
 if (lastPostTime && (Date.now() - lastPostTime < 4000)) return;
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 var postData = User.getProperty("current_post_data");
 if (!postData) {
   Api.sendMessage({

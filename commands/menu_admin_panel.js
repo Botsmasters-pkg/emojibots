@@ -10,7 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 var adminId = "8710308658";
 
 if (String(user.telegramid) !== adminId) {

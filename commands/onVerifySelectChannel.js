@@ -10,7 +10,8 @@
   group: 
 CMD*/
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 var userChannels = Bot.getProperty("user_channels") || {};
 var ulist = userChannels[user.telegramid] || [];
 var idx = User.getProperty("channel_check_idx") || 0;

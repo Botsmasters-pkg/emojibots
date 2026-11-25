@@ -14,7 +14,8 @@ if (typeof request !== "undefined" && request && request.id) {
   try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
 }
 
-var sc = Libs.emojiHelper.sc;
+var helper = (typeof Libs !== "undefined" && Libs) ? (Libs.emojiHelper || Libs.EmojiHelper) : null;
+var sc = (helper && helper.sc) ? helper.sc : function(s) { return s || ""; };
 
 var text = "<tg-emoji emoji-id='6154314868150243661'>📖</tg-emoji> <b>" + sc("DETAILED COMPREHENSIVE GUIDE & INSTRUCTIONS:") + "</b>\n\n" +
   "1. **" + sc("MAKE POST") + "**: " + sc("Click karke apna text bhejein. Text ke andar ke normal emojis automatic high-quality custom emojis me convert ho jayenge.") + "\n" +
