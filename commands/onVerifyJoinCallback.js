@@ -35,13 +35,27 @@ if (currentCh && currentCh.type === "request") {
   isMember = true;
 }
 
-// If user is a member of this channel, advance to next channel via decoupled runner
+// If user is a member of this channel, advance to next channel
 if (isMember) {
   var nextIdx = idx + 1;
+  while (nextIdx < mustJoin.length && mustJoin[nextIdx].type === "request") {
+    nextIdx++;
+  }
   User.setProperty("fsub_index", nextIdx, "integer");
 
-  // If more channels remaining, schedule next channel check in clean turn to keep sub-command depth = 1!
   if (nextIdx < mustJoin.length) {
+    // Check channel 1 directly with zero queue delay for instant response
+    if (nextIdx === 1) {
+      var nextCh = mustJoin[nextIdx];
+      Api.getChatMember({
+        chat_id: nextCh.id,
+        user_id: user.telegramid,
+        on_result: "/onVerifyJoinCallback",
+        on_error: "/onVerifyJoinCallback"
+      });
+      return;
+    }
+
     Bot.run({
       command: "verify_next_channel",
       run_after: 0.1

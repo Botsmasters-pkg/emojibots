@@ -59,10 +59,25 @@ if (!isMember) {
 
 // User is member of current channel, advance to next channel
 var nextIdx = idx + 1;
+while (nextIdx < mustJoin.length && mustJoin[nextIdx].type === "request") {
+  nextIdx++;
+}
 User.setProperty("gate_index", nextIdx, "integer");
 
 if (nextIdx < mustJoin.length) {
-  // Fresh turn execution so stack depth always resets to 1!
+  // Check channel 1 directly with zero queue delay for instant sub-second response
+  if (nextIdx === 1) {
+    var nextCh = mustJoin[nextIdx];
+    Api.getChatMember({
+      chat_id: nextCh.id,
+      user_id: user.telegramid,
+      on_result: "/onGateCheckCallback",
+      on_error: "/onGateCheckCallback"
+    });
+    return;
+  }
+
+  // If 3+ channels, use decoupled runner to keep stack depth safe
   Bot.run({
     command: "gate_check_step",
     run_after: 0.1
