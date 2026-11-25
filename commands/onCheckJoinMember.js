@@ -57,7 +57,9 @@ if (isMember) {
   }
   
   User.setProperty("fsub_index", 0, "integer");
-  Bot.runCommand("back_to_main");
+  User.setProperty("fsub_verified", true, "boolean");
+  Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
+  Bot.runCommand("back_to_main", { gate_passed: true });
   return;
 }
 

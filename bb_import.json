@@ -458,6 +458,21 @@
       "command": "confirm_join_request",
       "help": "Fallback button for users who submitted a channel join request",
       "file": "commands/confirm_join_request.js"
+    },
+    {
+      "command": "chat_member",
+      "help": "Telegram Chat Member update handler for real-time leave/kick detection",
+      "file": "commands/chat_member.js"
+    },
+    {
+      "command": "check_fsub_gate",
+      "help": "Real-time dynamic gate checking channel membership before allowing bot usage",
+      "file": "commands/check_fsub_gate.js"
+    },
+    {
+      "command": "/onGateCheckMember",
+      "help": "Callback for dynamic membership check gate",
+      "file": "commands/onGateCheckMember.js"
     }
   ]
 }

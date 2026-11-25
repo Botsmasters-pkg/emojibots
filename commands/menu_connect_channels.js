@@ -10,6 +10,15 @@
   group: 
 CMD*/
 
+var adminId = "8710308658";
+var isGateChecked = (typeof options !== "undefined" && options && options.gate_passed);
+
+if (String(user.telegramid) !== adminId && !isGateChecked) {
+  User.setProperty("fsub_target_cmd", "menu_connect_channels", "string");
+  Bot.runCommand("check_fsub_gate");
+  return;
+}
+
 var sc = Libs.emojiHelper.sc;
 var botUser = Libs.emojiHelper.get_bot_username();
 
