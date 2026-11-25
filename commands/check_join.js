@@ -32,7 +32,7 @@ if (!mustJoin || mustJoin.length === 0) {
   Bot.setProperty("fsub_verified_" + user.telegramid, true, "boolean");
   Bot.setProperty("fsub_verified_fp_" + user.telegramid, currentFp, "string");
   Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
-  Bot.runCommand("back_to_main");
+  Bot.runCommand("exec_back_to_main");
   return;
 }
 

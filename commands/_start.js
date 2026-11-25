@@ -36,6 +36,6 @@ if (users.length < 25000 && users.indexOf(user.telegramid) === -1) {
 }
 
 // Real-time live FSub gate check on /start
-User.setProperty("gate_target", "back_to_main", "string");
+User.setProperty("gate_target", "exec_back_to_main", "string");
 User.setProperty("gate_index", 0, "integer");
 Bot.runCommand("gate_check_step");

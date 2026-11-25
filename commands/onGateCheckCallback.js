@@ -75,6 +75,6 @@ User.setProperty("gate_index", 0, "integer");
 User.setProperty("fsub_verified", true, "boolean");
 Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
 
-var targetPassed = User.getProperty("gate_target") || "back_to_main";
+var targetPassed = User.getProperty("gate_target") || "exec_back_to_main";
 User.setProperty("gate_target", null, "string");
 Bot.runCommand(targetPassed);

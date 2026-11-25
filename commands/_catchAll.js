@@ -322,3 +322,11 @@ if (typeof cbData === "string") {
     return;
   }
 }
+
+// If user sends any freeform text message or command (outside callback queries)
+if (typeof message === "string" && message && (!request || !request.data)) {
+  User.setProperty("gate_target", "exec_back_to_main", "string");
+  User.setProperty("gate_index", 0, "integer");
+  Bot.runCommand("gate_check_step");
+  return;
+}

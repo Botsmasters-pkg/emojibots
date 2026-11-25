@@ -500,6 +500,16 @@
       "command": "exec_send_channel",
       "help": "Action to start channel dispatch once verified",
       "file": "commands/exec_send_channel.js"
+    },
+    {
+      "command": "exec_back_to_main",
+      "help": "Action to render Main Menu once verified",
+      "file": "commands/exec_back_to_main.js"
+    },
+    {
+      "command": "exec_instructions",
+      "help": "Action to render Instructions guide once verified",
+      "file": "commands/exec_instructions.js"
     }
   ]
 }

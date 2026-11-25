@@ -19,7 +19,7 @@ for (var i = 0; i < rawMustJoin.length; i++) {
 
 // If no channels configured, proceed directly to target action
 if (!mustJoin || mustJoin.length === 0) {
-  var targetNoCh = User.getProperty("gate_target") || "back_to_main";
+  var targetNoCh = User.getProperty("gate_target") || "exec_back_to_main";
   User.setProperty("gate_target", null, "string");
   Bot.runCommand(targetNoCh);
   return;
@@ -39,7 +39,7 @@ if (idx >= mustJoin.length) {
   User.setProperty("fsub_verified", true, "boolean");
   Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
 
-  var targetDone = User.getProperty("gate_target") || "back_to_main";
+  var targetDone = User.getProperty("gate_target") || "exec_back_to_main";
   User.setProperty("gate_target", null, "string");
   Bot.runCommand(targetDone);
   return;
