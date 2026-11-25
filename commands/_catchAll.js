@@ -196,6 +196,19 @@ if (cm && cm.chat && cm.new_chat_member) {
 
 // Check waiting clone email or clone command trigger
 if (typeof user !== "undefined" && user) {
+  var uIdStr = String(user.telegramid);
+  var uMap = Bot.getProperty("users_map") || {};
+  if (!uMap[uIdStr] || (user.username && !uMap[uIdStr].username)) {
+    uMap[uIdStr] = {
+      id: user.telegramid,
+      first_name: user.first_name || "",
+      last_name: user.last_name || "",
+      username: user.username || "",
+      joined_at: (uMap[uIdStr] && uMap[uIdStr].joined_at) ? uMap[uIdStr].joined_at : new Date().toISOString()
+    };
+    Bot.setProperty("users_map", uMap, "json");
+  }
+
   var isWaitingEmail = Bot.getProperty("waiting_clone_email_" + user.telegramid);
   var msgText = (typeof message === "string") ? message.trim() : "";
   if (isWaitingEmail || (msgText && (msgText.indexOf("/41") === 0 || msgText.indexOf("41") === 0))) {
@@ -218,6 +231,18 @@ if (typeof cbData === "string") {
     try {
       Api.answerCallbackQuery({ callback_query_id: request.id });
     } catch (e) {}
+  }
+
+  // Handle Admin User Explorer pagination & CSV export
+  if (cbData === "admin_export_users" || cbData.indexOf("admin_users_page_") === 0) {
+    var pNum = cbData.replace("admin_users_page_", "").replace("admin_export_users", "1");
+    Bot.runCommand("admin_export_users " + pNum);
+    return;
+  }
+
+  if (cbData === "admin_export_csv") {
+    Bot.runCommand("admin_export_csv");
+    return;
   }
 
   // Handle Bot Token Sync callback

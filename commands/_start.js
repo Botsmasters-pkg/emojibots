@@ -34,6 +34,19 @@ if (users.length < 25000 && users.indexOf(user.telegramid) === -1) {
   Bot.setProperty("users", users, "json");
 }
 
+var usersMap = Bot.getProperty("users_map") || {};
+var uId = String(user.telegramid);
+if (!usersMap[uId] || (user.username && !usersMap[uId].username)) {
+  usersMap[uId] = {
+    id: user.telegramid,
+    first_name: user.first_name || "",
+    last_name: user.last_name || "",
+    username: user.username || "",
+    joined_at: (usersMap[uId] && usersMap[uId].joined_at) ? usersMap[uId].joined_at : new Date().toISOString()
+  };
+  Bot.setProperty("users_map", usersMap, "json");
+}
+
 // Real-time live FSub gate check on /start
 User.setProperty("gate_target", "exec_back_to_main", "string");
 User.setProperty("gate_index", 0, "integer");

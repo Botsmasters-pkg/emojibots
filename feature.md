@@ -227,8 +227,22 @@ Bot normal emojis ko animated Telegram custom emojis (`<tg-emoji>`) me convert k
    - Total Active Force Join Channels.
    - Custom Text & Button Emojis count.
    - Bot Identity (Username, Title, Bot ID).
-2. **Export Users (`EXPORT USERS`):**
-   - Registered users ki list ko download/export karein (backup ya audit ke liye).
+2. **Export Users (`EXPORT USERS` / Paginated Directory):**
+   - **Total Users Counter:** Header me kul registered users aur current page count display hota hai.
+   - **10 Users Per Page (Pagination):**
+     - Page 1: Users 1 to 10
+     - Page 2: Users 11 to 20
+     - Page 3: Users 21 to 30 (aur aage isi tarah)
+     - `[ ⬅️ PREV ]` aur `[ NEXT ➡️ ]` navigation buttons.
+   - **100% Clickable Profiles & Usernames:**
+     - User ka Naam Telegram profile link `<a href="tg://user?id=UID">Name</a>` ke sath clickable hai (tap karte hi user se direct chat khul jati hai).
+     - User ka `@username` clickable hai (`https://t.me/username`).
+     - Har user ke sath `[ MESSAGE 💬 ]` direct message link diya gaya hai.
+     - User ID `<code>...</code>` format me hai jise tap karke copy kiya ja sakta hai.
+   - **📥 Full CSV Database Export:**
+     - Pagination ke theek neeche `[ 📥 EXPORT FULL CSV FILE ]` button diya gaya hai.
+     - Is par click karte hi sabhi users ka complete database CSV format me export ho jata hai:
+       `Index,User ID,First Name,Last Name,Username,Direct Profile Link,Registered Date`
 3. **Clean DB (`CLEAN DB`):**
    - Database se orphan ya invalid entries ko clean aur optimize karein.
 
@@ -249,7 +263,8 @@ Bot normal emojis ko animated Telegram custom emojis (`<tg-emoji>`) me convert k
 | `admin_add_text_emoji`| Map standard emoji to Telegram custom animated emoji | Admin Only |
 | `admin_list_text_emojis`| View all custom text emoji mappings | Admin Only |
 | `admin_remove_emoji`| Delete custom emoji from database | Admin Only |
-| `admin_export_users` | Export registered user IDs | Admin Only |
+| `admin_export_users` | Paginated User Directory (10 users/page) with Clickable Profiles | Admin Only |
+| `admin_export_csv` | Generate & Export Full Users Database to CSV file | Admin Only |
 | `admin_clean_db` | Optimize & clean bot database properties | Admin Only |
 | `back_to_main` | Exit Admin Panel and return to Main User Menu | All Users |
 

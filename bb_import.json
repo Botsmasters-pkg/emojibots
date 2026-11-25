@@ -391,8 +391,13 @@
     },
     {
       "command": "admin_export_users",
-      "help": "Export registered user IDs list",
+      "help": "Paginated users explorer with clickable profiles and CSV export",
       "file": "commands/admin_export_users.js"
+    },
+    {
+      "command": "admin_export_csv",
+      "help": "Export registered users database to CSV format",
+      "file": "commands/admin_export_csv.js"
     },
     {
       "command": "/onSyncBotIdentity",
