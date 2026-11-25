@@ -15,7 +15,7 @@ var sc = Libs.emojiHelper.sc;
 if (typeof request !== "undefined" && request && request.id) {
   try {
     Api.answerCallbackQuery({ callback_query_id: request.id });
-  } catch (e) {}
+  } catch (e) { }
 }
 
 var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
