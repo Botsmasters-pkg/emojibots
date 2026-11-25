@@ -30,21 +30,9 @@ if (member) {
   }
 }
 
-// For request channels: pending join request or self-verified counts as APPROVED / VERIFIED!
-if (!isMember && currentCh && currentCh.type === "request") {
-  var cId = String(currentCh.id);
-  var cleanCId = cId.replace(/^-100/, "").replace(/^-/, "");
-  if (
-    Bot.getProperty("cjr_" + cId + "_" + user.telegramid) ||
-    Bot.getProperty("cjr_-100" + cleanCId + "_" + user.telegramid) ||
-    Bot.getProperty("cjr_" + cleanCId + "_" + user.telegramid) ||
-    User.getProperty("cjr_" + cId) ||
-    User.getProperty("cjr_" + cleanCId) ||
-    User.getProperty("cjr_-100" + cleanCId) ||
-    User.getProperty("cjr_self_verified")
-  ) {
-    isMember = true;
-  }
+// Request channels automatically count as APPROVED / VERIFIED without waiting for admin approval!
+if (currentCh && currentCh.type === "request") {
+  isMember = true;
 }
 
 if (isMember) {
@@ -53,21 +41,10 @@ if (isMember) {
     User.setProperty("fsub_index", nextIdx, "integer");
     var nextCh = mustJoin[nextIdx];
 
+    // Request channels automatically count as verified
     if (nextCh.type === "request") {
-      var nId = String(nextCh.id);
-      var cleanNId = nId.replace(/^-100/, "").replace(/^-/, "");
-      if (
-        Bot.getProperty("cjr_" + nId + "_" + user.telegramid) ||
-        Bot.getProperty("cjr_-100" + cleanNId + "_" + user.telegramid) ||
-        Bot.getProperty("cjr_" + cleanNId + "_" + user.telegramid) ||
-        User.getProperty("cjr_" + nId) ||
-        User.getProperty("cjr_" + cleanNId) ||
-        User.getProperty("cjr_-100" + cleanNId) ||
-        User.getProperty("cjr_self_verified")
-      ) {
-        Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
-        return;
-      }
+      Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
+      return;
     }
 
     Api.getChatMember({
@@ -107,7 +84,6 @@ if (typeof request !== "undefined" && request && request.id) {
 var rows = [];
 var row = [];
 var channelListText = "";
-var hasRequestCh = false;
 
 for (var j = 0; j < mustJoin.length; j++) {
   var ch = mustJoin[j];
@@ -116,7 +92,6 @@ for (var j = 0; j < mustJoin.length; j++) {
   var btnText = "📢 " + chTitle;
 
   if (ch.type === "request") {
-    hasRequestCh = true;
     iconId = "6154635564768300782";
     btnText = "📩 " + chTitle;
     channelListText += (j + 1) + ". 📩 <b>" + chTitle + "</b> <i>(" + sc("Request Channel") + ")</i>\n";
@@ -157,17 +132,6 @@ if (row.length > 0) {
   rows.push(row);
 }
 
-if (hasRequestCh) {
-  rows.push([
-    {
-      text: sc("📩 I SENT JOIN REQUEST"),
-      callback_data: "confirm_join_request",
-      style: "primary",
-      icon_custom_emoji_id: "6154635564768300782"
-    }
-  ]);
-}
-
 // Bottom Verify Join button
 rows.push([
   { text: sc("✔ VERIFY JOIN"), callback_data: "check_join", style: "success", icon_custom_emoji_id: "6154718341672997377" }
@@ -176,8 +140,7 @@ rows.push([
 var notJoinedMsg = "<tg-emoji emoji-id='5870619152829386951'>😶</tg-emoji> <b>" + sc("ACCESS DENIED! PLEASE JOIN ALL REQUIRED CHANNELS:") + "</b>\n" +
   "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
   channelListText + "\n" +
-  "👉 <i>" + sc("Bot ke features unlock karne ke liye upar diye gaye sabhi channels ko join karein.") + "</i>" +
-  (hasRequestCh ? ("\n\n💡 <i>" + sc("Agar aapne Request Channel me Join Request bhej di hai, toh 'I SENT JOIN REQUEST' par click karein.") + "</i>") : "");
+  "👉 <i>" + sc("Bot ke features unlock karne ke liye upar diye gaye sabhi channels ko join karein.") + "</i>";
 
 Api.sendMessage({
   chat_id: chat.chatid,
