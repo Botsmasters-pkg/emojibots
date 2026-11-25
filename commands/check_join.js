@@ -39,7 +39,11 @@ if (firstCh.type === "request") {
   if (
     Bot.getProperty("cjr_" + cId + "_" + user.telegramid) ||
     Bot.getProperty("cjr_-100" + cleanCId + "_" + user.telegramid) ||
-    Bot.getProperty("cjr_" + cleanCId + "_" + user.telegramid)
+    Bot.getProperty("cjr_" + cleanCId + "_" + user.telegramid) ||
+    User.getProperty("cjr_" + cId) ||
+    User.getProperty("cjr_" + cleanCId) ||
+    User.getProperty("cjr_-100" + cleanCId) ||
+    User.getProperty("cjr_self_verified")
   ) {
     Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
     return;

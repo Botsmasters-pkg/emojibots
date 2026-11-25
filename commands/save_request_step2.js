@@ -84,7 +84,9 @@ Bot.setProperty("must_join", mustJoin, "json");
 var successMsg = "<tg-emoji emoji-id='6154718341672997377'>✔</tg-emoji> <b>" + sc("PRIVATE REQUEST CHANNEL ADDED SUCCESSFULLY!") + "</b>\n\n" +
   "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + chatId + "</code>\n" +
   "🔗 <b>" + sc("Request Link:") + "</b> " + inviteLink + "\n" +
-  "📩 <b>" + sc("Type:") + "</b> " + sc("Private Join Request Channel\n(Pending request will automatically count as verified)");
+  "📩 <b>" + sc("Type:") + "</b> " + sc("Private Join Request Channel\n(Pending request will automatically count as verified)") + "\n\n" +
+  "💡 <b>" + sc("IMPORTANT TIP:") + "</b>\n" +
+  "<i>" + sc("Channel me Bot ko Admin banate waqt 'Invite Users via Link' permission ON rakhein taaki Telegram join requests bot ko bhej sake!") + "</i>";
 
 Api.sendMessage({
   chat_id: chat.chatid,

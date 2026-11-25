@@ -17,91 +17,447 @@
     }
   ],
   "commands": [
-    { "command": "/start", "help": "Entry point and force join check", "file": "commands/_start.js" },
-    { "command": "/onCheckJoinMember", "help": "Recursive membership check for force join", "file": "commands/onCheckJoinMember.js" },
-    { "command": "check_join", "help": "Verify join channels callback", "file": "commands/check_join.js" },
-    { "command": "/onVerifyJoinCallback", "help": "Callback response for verify join", "file": "commands/onVerifyJoinCallback.js" },
-    { "command": "back_to_main", "help": "Return to main menu", "file": "commands/back_to_main.js" },
-    { "command": "menu_make_post", "help": "Start post creation flow", "file": "commands/menu_make_post.js" },
-    { "command": "/save_text_content", "help": "Process text and convert emojis", "file": "commands/save_text_content.js" },
-    { "command": "media_yes", "help": "Add media image prompt", "file": "commands/media_yes.js" },
-    { "command": "media_no", "help": "Proceed without media", "file": "commands/media_no.js" },
-    { "command": "/save_photo_only", "help": "Save uploaded photo", "file": "commands/save_photo_only.js" },
-    { "command": "/ask_for_buttons", "help": "Prompt to add inline buttons", "file": "commands/ask_for_buttons.js" },
-    { "command": "btn_skip", "help": "Skip buttons", "file": "commands/btn_skip.js" },
-    { "command": "btn_done", "help": "Finalize buttons", "file": "commands/btn_done.js" },
-    { "command": "/process_button_name", "help": "Process button label and prompt URL", "file": "commands/process_button_name.js" },
-    { "command": "/process_button_link", "help": "Validate URL and prompt color style", "file": "commands/process_button_link.js" },
-    { "command": "color_danger", "help": "Save button with danger (red) style", "file": "commands/color_danger.js" },
-    { "command": "color_success", "help": "Save button with success (green) style", "file": "commands/color_success.js" },
-    { "command": "color_primary", "help": "Save button with primary (blue) style", "file": "commands/color_primary.js" },
-    { "command": "color_skip", "help": "Save button with default/normal style", "file": "commands/color_skip.js" },
-    { "command": "more_btn_yes", "help": "Add more buttons", "file": "commands/more_btn_yes.js" },
-    { "command": "more_btn_no", "help": "Finish post", "file": "commands/more_btn_no.js" },
-    { "command": "/finalize_post", "help": "Generate Post ID and preview", "file": "commands/finalize_post.js" },
-    { "command": "menu_connect_channels", "help": "Connect channel prompt", "file": "commands/menu_connect_channels.js" },
-    { "command": "/verify_channel", "help": "Initiate strict admin check for channel", "file": "commands/verify_channel.js" },
-    { "command": "/onVerifyChannelUser", "help": "Enforce channel administrator status", "file": "commands/onVerifyChannelUser.js" },
-    { "command": "/onVerifyChannelError", "help": "Handle channel lookup failure", "file": "commands/onVerifyChannelError.js" },
-    { "command": "menu_send_channel", "help": "Prompt Post ID for publishing", "file": "commands/menu_send_channel.js" },
-    { "command": "/select_channel", "help": "Dynamically re-check connected channels", "file": "commands/select_channel.js" },
-    { "command": "/onVerifySelectChannel", "help": "Filter valid channels where user is admin", "file": "commands/onVerifySelectChannel.js" },
-    { "command": "/onVerifySendChannel", "help": "Final re-verify and channel dispatch", "file": "commands/onVerifySendChannel.js" },
-    { "command": "menu_instructions", "help": "Display comprehensive instructions", "file": "commands/menu_instructions.js" },
-    { "command": "menu_admin_panel", "help": "Open admin control dashboard", "file": "commands/menu_admin_panel.js" },
-    { "command": "admin_status", "help": "View bot status and analytics", "file": "commands/admin_status.js" },
-    { "command": "admin_broadcast", "help": "Prompt broadcast message", "file": "commands/admin_broadcast.js" },
-    { "command": "/perform_broadcast", "help": "Dispatch broadcast to users", "file": "commands/perform_broadcast.js" },
-    { "command": "admin_add_text_emoji", "help": "Prompt new text emoji IDs", "file": "commands/admin_add_text_emoji.js" },
-    { "command": "/save_new_text_emoji", "help": "Save text emoji IDs to DB", "file": "commands/save_new_text_emoji.js" },
-    { "command": "admin_add_btn_emoji", "help": "Prompt new button emoji IDs", "file": "commands/admin_add_btn_emoji.js" },
-    { "command": "/save_new_btn_emoji", "help": "Save button emoji IDs to DB", "file": "commands/save_new_btn_emoji.js" },
-    { "command": "admin_list_text_emojis", "help": "List text emojis database", "file": "commands/admin_list_text_emojis.js" },
-    { "command": "admin_list_btn_emojis", "help": "List button emojis database", "file": "commands/admin_list_btn_emojis.js" },
-    { "command": "admin_remove_emoji", "help": "Prompt emoji IDs to remove", "file": "commands/admin_remove_emoji.js" },
-    { "command": "/remove_emoji_id", "help": "Remove emoji IDs from DB", "file": "commands/remove_emoji_id.js" },
-    { "command": "admin_list_channels", "help": "List force join channels", "file": "commands/admin_list_channels.js" },
-    { "command": "admin_add_channel", "help": "Prompt channel type selection", "file": "commands/admin_add_channel.js" },
-    { "command": "add_ch_public", "help": "Prompt public channel username", "file": "commands/add_ch_public.js" },
-    { "command": "/save_public_channel", "help": "Save public channel to force join list", "file": "commands/save_public_channel.js" },
-    { "command": "add_ch_private", "help": "Prompt private channel details", "file": "commands/add_ch_private.js" },
-    { "command": "/save_private_step1", "help": "Save private channel chat ID (step 1)", "file": "commands/save_private_step1.js" },
-    { "command": "/save_private_step2", "help": "Save private channel invite link (step 2)", "file": "commands/save_private_step2.js" },
-    { "command": "add_ch_request", "help": "Prompt private request channel details", "file": "commands/add_ch_request.js" },
-    { "command": "/save_request_step1", "help": "Save request channel chat ID (step 1)", "file": "commands/save_request_step1.js" },
-    { "command": "/save_request_step2", "help": "Save request channel invite link (step 2)", "file": "commands/save_request_step2.js" },
-    { "command": "/save_new_channel", "help": "Add channel to force join list", "file": "commands/save_new_channel.js" },
-    { "command": "admin_remove_channel", "help": "Prompt channel to remove", "file": "commands/admin_remove_channel.js" },
-    { "command": "/delete_channel", "help": "Remove channel from force join list", "file": "commands/delete_channel.js" },
-    { "command": "admin_channel_control", "help": "Channel control dashboard for all admin channels", "file": "commands/admin_channel_control.js" },
-    { "command": "ctrl_channel_view", "help": "View specific channel control options", "file": "commands/ctrl_channel_view.js" },
-    { "command": "/onCtrlVerifyBotAdmin", "help": "Verify bot admin rights in channel", "file": "commands/onCtrlVerifyBotAdmin.js" },
-    { "command": "ctrl_act_link", "help": "Export channel invite link", "file": "commands/ctrl_act_link.js" },
-    { "command": "/onCtrlLinkResult", "help": "Display exported channel invite link", "file": "commands/onCtrlLinkResult.js" },
-    { "command": "ctrl_act_status", "help": "Check detailed bot admin permissions", "file": "commands/ctrl_act_status.js" },
-    { "command": "/onCtrlStatusResult", "help": "Display bot admin permissions checklist", "file": "commands/onCtrlStatusResult.js" },
-    { "command": "ctrl_act_promote", "help": "Prompt user ID to promote to admin", "file": "commands/ctrl_act_promote.js" },
-    { "command": "/ctrl_process_promote", "help": "Execute promote user to admin", "file": "commands/ctrl_process_promote.js" },
-    { "command": "/onCtrlPromoteDone", "help": "Promote user result callback", "file": "commands/onCtrlPromoteDone.js" },
-    { "command": "ctrl_act_demote", "help": "Prompt user ID to demote from admin", "file": "commands/ctrl_act_demote.js" },
-    { "command": "/ctrl_process_demote", "help": "Execute demote admin to member", "file": "commands/ctrl_process_demote.js" },
-    { "command": "/onCtrlDemoteDone", "help": "Demote user result callback", "file": "commands/onCtrlDemoteDone.js" },
-    { "command": "ctrl_act_send", "help": "Prompt message to dispatch to channel", "file": "commands/ctrl_act_send.js" },
-    { "command": "/ctrl_process_send", "help": "Execute send message to channel", "file": "commands/ctrl_process_send.js" },
-    { "command": "ctrl_act_delete", "help": "Prompt post link or ID to delete", "file": "commands/ctrl_act_delete.js" },
-    { "command": "/ctrl_process_delete", "help": "Execute delete message from channel", "file": "commands/ctrl_process_delete.js" },
-    { "command": "/onCtrlDeleteDone", "help": "Delete message result callback", "file": "commands/onCtrlDeleteDone.js" },
-    { "command": "admin_clean_db", "help": "Clear temporary posts database", "file": "commands/admin_clean_db.js" },
-    { "command": "admin_export_users", "help": "Export registered user IDs list", "file": "commands/admin_export_users.js" },
-    { "command": "/onSyncBotIdentity", "help": "Background handler to auto-detect bot username, title, and ID from token", "file": "commands/onSyncBotIdentity.js" },
-    { "command": "sync_bot_identity", "aliases": "/sync_bot, /sync_token", "help": "Manually trigger Telegram Bot API getMe to sync bot identity from token", "file": "commands/sync_bot_identity.js" },
-    { "command": "/onSyncBotIdentityDone", "help": "Callback handler for manual sync of bot identity", "file": "commands/onSyncBotIdentityDone.js" },
-    { "command": "/onEnsureWebhookAllowedUpdates", "help": "Ensure Telegram webhook allowed_updates includes my_chat_member", "file": "commands/onEnsureWebhookAllowedUpdates.js" },
-    { "command": "ctrl_add_ch_prompt", "help": "Prompt admin to connect / add a channel to Channel Control", "file": "commands/ctrl_add_ch_prompt.js" },
-    { "command": "/ctrl_process_add_ch", "help": "Process channel username, link, or forwarded post to add to Channel Control", "file": "commands/ctrl_process_add_ch.js" },
-    { "command": "/onCtrlAddChVerify", "help": "Callback verifying bot admin rights when adding channel to Channel Control", "file": "commands/onCtrlAddChVerify.js" },
-    { "command": "/ignore", "help": "Silent error sink for harmless Telegram API notices", "file": "commands/ignore.js" },
-    { "command": "/41", "aliases": "41, /clone, clone", "help": "Clone and install bot to user Bots.Business email", "file": "commands/_41.js" },
-    { "command": "*", "help": "Catch-all command for dynamic send routing", "file": "commands/_catchAll.js" }
+    {
+      "command": "/start",
+      "help": "Entry point and force join check",
+      "file": "commands/_start.js"
+    },
+    {
+      "command": "/onCheckJoinMember",
+      "help": "Recursive membership check for force join",
+      "file": "commands/onCheckJoinMember.js"
+    },
+    {
+      "command": "check_join",
+      "help": "Verify join channels callback",
+      "file": "commands/check_join.js"
+    },
+    {
+      "command": "/onVerifyJoinCallback",
+      "help": "Callback response for verify join",
+      "file": "commands/onVerifyJoinCallback.js"
+    },
+    {
+      "command": "back_to_main",
+      "help": "Return to main menu",
+      "file": "commands/back_to_main.js"
+    },
+    {
+      "command": "menu_make_post",
+      "help": "Start post creation flow",
+      "file": "commands/menu_make_post.js"
+    },
+    {
+      "command": "/save_text_content",
+      "help": "Process text and convert emojis",
+      "file": "commands/save_text_content.js"
+    },
+    {
+      "command": "media_yes",
+      "help": "Add media image prompt",
+      "file": "commands/media_yes.js"
+    },
+    {
+      "command": "media_no",
+      "help": "Proceed without media",
+      "file": "commands/media_no.js"
+    },
+    {
+      "command": "/save_photo_only",
+      "help": "Save uploaded photo",
+      "file": "commands/save_photo_only.js"
+    },
+    {
+      "command": "/ask_for_buttons",
+      "help": "Prompt to add inline buttons",
+      "file": "commands/ask_for_buttons.js"
+    },
+    {
+      "command": "btn_skip",
+      "help": "Skip buttons",
+      "file": "commands/btn_skip.js"
+    },
+    {
+      "command": "btn_done",
+      "help": "Finalize buttons",
+      "file": "commands/btn_done.js"
+    },
+    {
+      "command": "/process_button_name",
+      "help": "Process button label and prompt URL",
+      "file": "commands/process_button_name.js"
+    },
+    {
+      "command": "/process_button_link",
+      "help": "Validate URL and prompt color style",
+      "file": "commands/process_button_link.js"
+    },
+    {
+      "command": "color_danger",
+      "help": "Save button with danger (red) style",
+      "file": "commands/color_danger.js"
+    },
+    {
+      "command": "color_success",
+      "help": "Save button with success (green) style",
+      "file": "commands/color_success.js"
+    },
+    {
+      "command": "color_primary",
+      "help": "Save button with primary (blue) style",
+      "file": "commands/color_primary.js"
+    },
+    {
+      "command": "color_skip",
+      "help": "Save button with default/normal style",
+      "file": "commands/color_skip.js"
+    },
+    {
+      "command": "more_btn_yes",
+      "help": "Add more buttons",
+      "file": "commands/more_btn_yes.js"
+    },
+    {
+      "command": "more_btn_no",
+      "help": "Finish post",
+      "file": "commands/more_btn_no.js"
+    },
+    {
+      "command": "/finalize_post",
+      "help": "Generate Post ID and preview",
+      "file": "commands/finalize_post.js"
+    },
+    {
+      "command": "menu_connect_channels",
+      "help": "Connect channel prompt",
+      "file": "commands/menu_connect_channels.js"
+    },
+    {
+      "command": "/verify_channel",
+      "help": "Initiate strict admin check for channel",
+      "file": "commands/verify_channel.js"
+    },
+    {
+      "command": "/onVerifyChannelUser",
+      "help": "Enforce channel administrator status",
+      "file": "commands/onVerifyChannelUser.js"
+    },
+    {
+      "command": "/onVerifyChannelError",
+      "help": "Handle channel lookup failure",
+      "file": "commands/onVerifyChannelError.js"
+    },
+    {
+      "command": "menu_send_channel",
+      "help": "Prompt Post ID for publishing",
+      "file": "commands/menu_send_channel.js"
+    },
+    {
+      "command": "/select_channel",
+      "help": "Dynamically re-check connected channels",
+      "file": "commands/select_channel.js"
+    },
+    {
+      "command": "/onVerifySelectChannel",
+      "help": "Filter valid channels where user is admin",
+      "file": "commands/onVerifySelectChannel.js"
+    },
+    {
+      "command": "/onVerifySendChannel",
+      "help": "Final re-verify and channel dispatch",
+      "file": "commands/onVerifySendChannel.js"
+    },
+    {
+      "command": "menu_instructions",
+      "help": "Display comprehensive instructions",
+      "file": "commands/menu_instructions.js"
+    },
+    {
+      "command": "menu_admin_panel",
+      "help": "Open admin control dashboard",
+      "file": "commands/menu_admin_panel.js"
+    },
+    {
+      "command": "admin_status",
+      "help": "View bot status and analytics",
+      "file": "commands/admin_status.js"
+    },
+    {
+      "command": "admin_broadcast",
+      "help": "Prompt broadcast message",
+      "file": "commands/admin_broadcast.js"
+    },
+    {
+      "command": "/perform_broadcast",
+      "help": "Dispatch broadcast to users",
+      "file": "commands/perform_broadcast.js"
+    },
+    {
+      "command": "admin_add_text_emoji",
+      "help": "Prompt new text emoji IDs",
+      "file": "commands/admin_add_text_emoji.js"
+    },
+    {
+      "command": "/save_new_text_emoji",
+      "help": "Save text emoji IDs to DB",
+      "file": "commands/save_new_text_emoji.js"
+    },
+    {
+      "command": "admin_add_btn_emoji",
+      "help": "Prompt new button emoji IDs",
+      "file": "commands/admin_add_btn_emoji.js"
+    },
+    {
+      "command": "/save_new_btn_emoji",
+      "help": "Save button emoji IDs to DB",
+      "file": "commands/save_new_btn_emoji.js"
+    },
+    {
+      "command": "admin_list_text_emojis",
+      "help": "List text emojis database",
+      "file": "commands/admin_list_text_emojis.js"
+    },
+    {
+      "command": "admin_list_btn_emojis",
+      "help": "List button emojis database",
+      "file": "commands/admin_list_btn_emojis.js"
+    },
+    {
+      "command": "admin_remove_emoji",
+      "help": "Prompt emoji IDs to remove",
+      "file": "commands/admin_remove_emoji.js"
+    },
+    {
+      "command": "/remove_emoji_id",
+      "help": "Remove emoji IDs from DB",
+      "file": "commands/remove_emoji_id.js"
+    },
+    {
+      "command": "admin_list_channels",
+      "help": "List force join channels",
+      "file": "commands/admin_list_channels.js"
+    },
+    {
+      "command": "admin_add_channel",
+      "help": "Prompt channel type selection",
+      "file": "commands/admin_add_channel.js"
+    },
+    {
+      "command": "add_ch_public",
+      "help": "Prompt public channel username",
+      "file": "commands/add_ch_public.js"
+    },
+    {
+      "command": "/save_public_channel",
+      "help": "Save public channel to force join list",
+      "file": "commands/save_public_channel.js"
+    },
+    {
+      "command": "add_ch_private",
+      "help": "Prompt private channel details",
+      "file": "commands/add_ch_private.js"
+    },
+    {
+      "command": "/save_private_step1",
+      "help": "Save private channel chat ID (step 1)",
+      "file": "commands/save_private_step1.js"
+    },
+    {
+      "command": "/save_private_step2",
+      "help": "Save private channel invite link (step 2)",
+      "file": "commands/save_private_step2.js"
+    },
+    {
+      "command": "add_ch_request",
+      "help": "Prompt private request channel details",
+      "file": "commands/add_ch_request.js"
+    },
+    {
+      "command": "/save_request_step1",
+      "help": "Save request channel chat ID (step 1)",
+      "file": "commands/save_request_step1.js"
+    },
+    {
+      "command": "/save_request_step2",
+      "help": "Save request channel invite link (step 2)",
+      "file": "commands/save_request_step2.js"
+    },
+    {
+      "command": "/save_new_channel",
+      "help": "Add channel to force join list",
+      "file": "commands/save_new_channel.js"
+    },
+    {
+      "command": "admin_remove_channel",
+      "help": "Prompt channel to remove",
+      "file": "commands/admin_remove_channel.js"
+    },
+    {
+      "command": "/delete_channel",
+      "help": "Remove channel from force join list",
+      "file": "commands/delete_channel.js"
+    },
+    {
+      "command": "admin_channel_control",
+      "help": "Channel control dashboard for all admin channels",
+      "file": "commands/admin_channel_control.js"
+    },
+    {
+      "command": "ctrl_channel_view",
+      "help": "View specific channel control options",
+      "file": "commands/ctrl_channel_view.js"
+    },
+    {
+      "command": "/onCtrlVerifyBotAdmin",
+      "help": "Verify bot admin rights in channel",
+      "file": "commands/onCtrlVerifyBotAdmin.js"
+    },
+    {
+      "command": "ctrl_act_link",
+      "help": "Export channel invite link",
+      "file": "commands/ctrl_act_link.js"
+    },
+    {
+      "command": "/onCtrlLinkResult",
+      "help": "Display exported channel invite link",
+      "file": "commands/onCtrlLinkResult.js"
+    },
+    {
+      "command": "ctrl_act_status",
+      "help": "Check detailed bot admin permissions",
+      "file": "commands/ctrl_act_status.js"
+    },
+    {
+      "command": "/onCtrlStatusResult",
+      "help": "Display bot admin permissions checklist",
+      "file": "commands/onCtrlStatusResult.js"
+    },
+    {
+      "command": "ctrl_act_promote",
+      "help": "Prompt user ID to promote to admin",
+      "file": "commands/ctrl_act_promote.js"
+    },
+    {
+      "command": "/ctrl_process_promote",
+      "help": "Execute promote user to admin",
+      "file": "commands/ctrl_process_promote.js"
+    },
+    {
+      "command": "/onCtrlPromoteDone",
+      "help": "Promote user result callback",
+      "file": "commands/onCtrlPromoteDone.js"
+    },
+    {
+      "command": "ctrl_act_demote",
+      "help": "Prompt user ID to demote from admin",
+      "file": "commands/ctrl_act_demote.js"
+    },
+    {
+      "command": "/ctrl_process_demote",
+      "help": "Execute demote admin to member",
+      "file": "commands/ctrl_process_demote.js"
+    },
+    {
+      "command": "/onCtrlDemoteDone",
+      "help": "Demote user result callback",
+      "file": "commands/onCtrlDemoteDone.js"
+    },
+    {
+      "command": "ctrl_act_send",
+      "help": "Prompt message to dispatch to channel",
+      "file": "commands/ctrl_act_send.js"
+    },
+    {
+      "command": "/ctrl_process_send",
+      "help": "Execute send message to channel",
+      "file": "commands/ctrl_process_send.js"
+    },
+    {
+      "command": "ctrl_act_delete",
+      "help": "Prompt post link or ID to delete",
+      "file": "commands/ctrl_act_delete.js"
+    },
+    {
+      "command": "/ctrl_process_delete",
+      "help": "Execute delete message from channel",
+      "file": "commands/ctrl_process_delete.js"
+    },
+    {
+      "command": "/onCtrlDeleteDone",
+      "help": "Delete message result callback",
+      "file": "commands/onCtrlDeleteDone.js"
+    },
+    {
+      "command": "admin_clean_db",
+      "help": "Clear temporary posts database",
+      "file": "commands/admin_clean_db.js"
+    },
+    {
+      "command": "admin_export_users",
+      "help": "Export registered user IDs list",
+      "file": "commands/admin_export_users.js"
+    },
+    {
+      "command": "/onSyncBotIdentity",
+      "help": "Background handler to auto-detect bot username, title, and ID from token",
+      "file": "commands/onSyncBotIdentity.js"
+    },
+    {
+      "command": "sync_bot_identity",
+      "aliases": "/sync_bot, /sync_token",
+      "help": "Manually trigger Telegram Bot API getMe to sync bot identity from token",
+      "file": "commands/sync_bot_identity.js"
+    },
+    {
+      "command": "/onSyncBotIdentityDone",
+      "help": "Callback handler for manual sync of bot identity",
+      "file": "commands/onSyncBotIdentityDone.js"
+    },
+    {
+      "command": "/onEnsureWebhookAllowedUpdates",
+      "help": "Ensure Telegram webhook allowed_updates includes my_chat_member",
+      "file": "commands/onEnsureWebhookAllowedUpdates.js"
+    },
+    {
+      "command": "ctrl_add_ch_prompt",
+      "help": "Prompt admin to connect / add a channel to Channel Control",
+      "file": "commands/ctrl_add_ch_prompt.js"
+    },
+    {
+      "command": "/ctrl_process_add_ch",
+      "help": "Process channel username, link, or forwarded post to add to Channel Control",
+      "file": "commands/ctrl_process_add_ch.js"
+    },
+    {
+      "command": "/onCtrlAddChVerify",
+      "help": "Callback verifying bot admin rights when adding channel to Channel Control",
+      "file": "commands/onCtrlAddChVerify.js"
+    },
+    {
+      "command": "/ignore",
+      "help": "Silent error sink for harmless Telegram API notices",
+      "file": "commands/ignore.js"
+    },
+    {
+      "command": "/41",
+      "aliases": "41, /clone, clone",
+      "help": "Clone and install bot to user Bots.Business email",
+      "file": "commands/_41.js"
+    },
+    {
+      "command": "*",
+      "help": "Catch-all command for dynamic send routing",
+      "file": "commands/_catchAll.js"
+    },
+    {
+      "command": "chat_join_request",
+      "help": "Telegram Chat Join Request handler",
+      "file": "commands/chat_join_request.js"
+    },
+    {
+      "command": "confirm_join_request",
+      "help": "Fallback button for users who submitted a channel join request",
+      "file": "commands/confirm_join_request.js"
+    }
   ]
 }
