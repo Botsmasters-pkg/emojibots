@@ -22,8 +22,15 @@ if (!Bot.getProperty("bot_username") || !Bot.getProperty("bot_telegram_id")) {
   });
 }
 
+// Thread-safe and scalable user tracking
+if (!User.getProperty("bot_user_registered")) {
+  User.setProperty("bot_user_registered", true, "boolean");
+  var curCount = Bot.getProperty("total_users_count") || 0;
+  Bot.setProperty("total_users_count", curCount + 1, "integer");
+}
+
 var users = Bot.getProperty("users") || [];
-if (users.indexOf(user.telegramid) === -1) {
+if (users.length < 25000 && users.indexOf(user.telegramid) === -1) {
   users.push(user.telegramid);
   Bot.setProperty("users", users, "json");
 }

@@ -1,6 +1,6 @@
 /*CMD
   command: /onVerifyJoinCallback
-  help: 
+  help: Single channel verification callback with clean decoupled scheduling
   need_reply: false
   auto_retry_time: 
   folder: 
@@ -30,35 +30,30 @@ if (member) {
   }
 }
 
-// Request channels automatically count as APPROVED / VERIFIED without waiting for admin approval!
+// Request channels automatically count as approved
 if (currentCh && currentCh.type === "request") {
   isMember = true;
 }
 
+// If user is a member of this channel, advance to next channel via decoupled runner
 if (isMember) {
   var nextIdx = idx + 1;
+  User.setProperty("fsub_index", nextIdx, "integer");
+
+  // If more channels remaining, schedule next channel check in clean turn to keep sub-command depth = 1!
   if (nextIdx < mustJoin.length) {
-    User.setProperty("fsub_index", nextIdx, "integer");
-    var nextCh = mustJoin[nextIdx];
-
-    // Request channels automatically count as verified
-    if (nextCh.type === "request") {
-      Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
-      return;
-    }
-
-    Api.getChatMember({
-      chat_id: nextCh.id,
-      user_id: user.telegramid,
-      on_result: "/onVerifyJoinCallback",
-      on_error: "/onVerifyJoinCallback"
+    Bot.run({
+      command: "verify_next_channel",
+      run_after: 0.1
     });
     return;
   }
-  
+
+  // All channels verified!
   User.setProperty("fsub_index", 0, "integer");
   User.setProperty("fsub_verified", true, "boolean");
   Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
+
   var successMsg = "<tg-emoji emoji-id='6154718341672997377'>✔</tg-emoji> <b>" + sc("VERIFICATION SUCCESSFUL! ALL CHANNELS JOINED SUCCESSFULLY. PLEASE USE THE MENU BELOW.") + "</b>";
   Api.sendMessage({
     chat_id: chat.chatid,
@@ -69,6 +64,8 @@ if (isMember) {
   return;
 }
 
+// User is NOT a member of this channel!
+// Stop checking, show alert and channel buttons
 if (typeof request !== "undefined" && request && request.id) {
   try {
     var missingName = currentCh ? (currentCh.title || currentCh.id) : "";
@@ -81,73 +78,4 @@ if (typeof request !== "undefined" && request && request.id) {
   } catch (e) {}
 }
 
-// User is not a member of all required channels.
-// Build channel list and buttons showing exact channel titles
-var rows = [];
-var row = [];
-var channelListText = "";
-
-for (var j = 0; j < mustJoin.length; j++) {
-  var ch = mustJoin[j];
-  var chTitle = ch.title || ch.id;
-  var iconId = "6154631793787015439";
-  var btnText = "📢 " + chTitle;
-
-  if (ch.type === "request") {
-    iconId = "6154635564768300782";
-    btnText = "📩 " + chTitle;
-    channelListText += (j + 1) + ". 📩 <b>" + chTitle + "</b> <i>(" + sc("Request Channel") + ")</i>\n";
-  } else if (ch.type === "private") {
-    iconId = "5213285132709929474";
-    btnText = "🔒 " + chTitle;
-    channelListText += (j + 1) + ". 🔒 <b>" + chTitle + "</b> <i>(" + sc("Private Channel") + ")</i>\n";
-  } else {
-    channelListText += (j + 1) + ". 📢 <b>" + chTitle + "</b>\n";
-  }
-
-  if (btnText.length > 20) {
-    if (row.length > 0) {
-      rows.push(row);
-      row = [];
-    }
-    rows.push([{
-      text: btnText,
-      url: ch.url,
-      style: "primary",
-      icon_custom_emoji_id: iconId
-    }]);
-  } else {
-    row.push({
-      text: btnText,
-      url: ch.url,
-      style: "primary",
-      icon_custom_emoji_id: iconId
-    });
-    if (row.length === 2) {
-      rows.push(row);
-      row = [];
-    }
-  }
-}
-
-if (row.length > 0) {
-  rows.push(row);
-}
-
-// Bottom Verify Join button
-rows.push([
-  { text: sc("✔ VERIFY JOIN"), callback_data: "check_join", style: "success", icon_custom_emoji_id: "6154718341672997377" }
-]);
-
-var notJoinedMsg = "<tg-emoji emoji-id='5870619152829386951'>😶</tg-emoji> <b>" + sc("ACCESS DENIED! PLEASE JOIN ALL REQUIRED CHANNELS:") + "</b>\n" +
-  "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-  channelListText + "\n" +
-  "👉 <i>" + sc("Bot ke features unlock karne ke liye upar diye gaye sabhi channels ko join karein.") + "</i>";
-
-Api.sendMessage({
-  chat_id: chat.chatid,
-  text: notJoinedMsg,
-  parse_mode: "html",
-  disable_web_page_preview: true,
-  reply_markup: { inline_keyboard: rows }
-});
+Bot.runCommand("show_force_join");

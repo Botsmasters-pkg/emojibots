@@ -1,6 +1,6 @@
 /*CMD
   command: check_join
-  help: 
+  help: Entry point to verify join for all channels
   need_reply: false
   auto_retry_time: 
   folder: 
@@ -15,7 +15,7 @@ var sc = Libs.emojiHelper.sc;
 if (typeof request !== "undefined" && request && request.id) {
   try {
     Api.answerCallbackQuery({ callback_query_id: request.id });
-  } catch (e) { }
+  } catch (e) {}
 }
 
 var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
@@ -26,22 +26,11 @@ for (var i = 0; i < rawMustJoin.length; i++) {
 }
 
 if (!mustJoin || mustJoin.length === 0) {
+  User.setProperty("fsub_verified", true, "boolean");
+  Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
   Bot.runCommand("back_to_main");
   return;
 }
 
 User.setProperty("fsub_index", 0, "integer");
-var firstCh = mustJoin[0];
-
-// Request channels automatically count as verified (no waiting for admin approval)
-if (firstCh.type === "request") {
-  Bot.runCommand("/onVerifyJoinCallback", { result: { status: "member" } });
-  return;
-}
-
-Api.getChatMember({
-  chat_id: firstCh.id,
-  user_id: user.telegramid,
-  on_result: "/onVerifyJoinCallback",
-  on_error: "/onVerifyJoinCallback"
-});
+Bot.runCommand("verify_next_channel");
