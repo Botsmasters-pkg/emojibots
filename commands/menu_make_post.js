@@ -11,11 +11,13 @@
 CMD*/
 
 var adminId = "8710308658";
-var isGateChecked = (typeof options !== "undefined" && options && options.gate_passed);
+var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
+var hasChannels = rawMustJoin && rawMustJoin.length > 0;
+var isVerified = User.getProperty("fsub_verified");
+var userLeft = Bot.getProperty("user_left_" + user.telegramid);
 
-if (String(user.telegramid) !== adminId && !isGateChecked) {
-  User.setProperty("fsub_target_cmd", "menu_make_post", "string");
-  Bot.runCommand("check_fsub_gate");
+if (String(user.telegramid) !== adminId && hasChannels && (!isVerified || userLeft)) {
+  Bot.runCommand("show_force_join");
   return;
 }
 

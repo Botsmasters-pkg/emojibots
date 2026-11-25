@@ -462,14 +462,9 @@
       "file": "commands/chat_member.js"
     },
     {
-      "command": "check_fsub_gate",
-      "help": "Real-time dynamic gate checking channel membership before allowing bot usage",
-      "file": "commands/check_fsub_gate.js"
-    },
-    {
-      "command": "/onGateCheckMember",
-      "help": "Callback for dynamic membership check gate",
-      "file": "commands/onGateCheckMember.js"
+      "command": "show_force_join",
+      "help": "Display force join channels and verify button",
+      "file": "commands/show_force_join.js"
     }
   ]
 }

@@ -14,19 +14,13 @@ var sc = Libs.emojiHelper.sc;
 var adminId = "8710308658";
 Bot.setProperty("admin_id", adminId, "string");
 
-// Auto-detect bot identity from token if not yet synced or periodically
+// Auto-detect bot identity from token if not yet synced
 if (!Bot.getProperty("bot_username") || !Bot.getProperty("bot_telegram_id")) {
   Api.getMe({
     on_result: "/onSyncBotIdentity",
     on_error: "/onSyncBotIdentity"
   });
 }
-
-// Ensure webhook allows my_chat_member updates for auto-detecting admin channels
-Api.getWebhookInfo({
-  on_result: "/onEnsureWebhookAllowedUpdates",
-  on_error: "/onEnsureWebhookAllowedUpdates"
-});
 
 var users = Bot.getProperty("users") || [];
 if (users.indexOf(user.telegramid) === -1) {
@@ -58,23 +52,15 @@ for (var i = 0; i < rawMustJoin.length; i++) {
   if (norm) mustJoin.push(norm);
 }
 
-if (mustJoin && mustJoin.length > 0) {
-  User.setProperty("fsub_index", 0, "integer");
-  var firstCh = mustJoin[0];
+// If channels are configured and user is not admin
+if (mustJoin && mustJoin.length > 0 && String(user.telegramid) !== adminId) {
+  var isVerified = User.getProperty("fsub_verified");
+  var userLeft = Bot.getProperty("user_left_" + user.telegramid);
   
-  // If request channel, automatically verified without waiting for admin approval
-  if (firstCh.type === "request") {
-    Bot.runCommand("/onCheckJoinMember", { result: { status: "member" } });
+  if (!isVerified || userLeft) {
+    Bot.runCommand("show_force_join");
     return;
   }
-
-  Api.getChatMember({
-    chat_id: firstCh.id,
-    user_id: user.telegramid,
-    on_result: "/onCheckJoinMember",
-    on_error: "/onCheckJoinMember"
-  });
-  return;
 }
 
 Bot.runCommand("back_to_main");
