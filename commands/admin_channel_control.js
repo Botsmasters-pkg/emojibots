@@ -20,7 +20,7 @@ if (typeof request !== "undefined" && request && request.id) {
       callback_query_id: request.id,
       text: "🔄 Channels list refreshed!"
     });
-  } catch (e) {}
+  } catch (e) { }
 }
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
@@ -89,7 +89,7 @@ for (var i = 0; i < chKeys.length; i++) {
   var cid = chKeys[i];
   var cObj = ctrlChannels[cid];
   var title = (cObj && cObj.title) ? cObj.title : ("Channel (" + cid.slice(-4) + ")");
-  
+
   row.push({
     text: "📢 " + title,
     callback_data: "ctrl_ch_" + cid,
@@ -121,9 +121,9 @@ var botUser = Libs.emojiHelper.get_bot_username();
 var channelCountText = chKeys.length > 0
   ? "<b>" + sc("Connected Channels:") + "</b> <code>" + chKeys.length + "</code>\n\n" + sc("Kisi bhi channel ko manage karne ke liye uske button par click karein:")
   : "<i>" + sc("Filhal koi channel controlled list me nahi hai.") + "</i>\n\n" +
-    "💡 <b>" + sc("Yeh kaise kaam karta hai?") + "</b>\n" +
-    sc("Aap kisi bhi channel me is bot (") + "<code>" + botUser + "</code>" + sc(") ko") + " <b>" + sc("Administrator") + "</b> " + sc("banayein, bot automatically yahan jud jayega aur aapko notification aayega!") + "\n\n" +
-    "⚠️ <i>" + sc("Agar bot ko kisi channel se hata diya jata hai, to wo automatically yahan se gayab ho jayega.") + "</i>";
+  "💡 <b>" + sc("Yeh kaise kaam karta hai?") + "</b>\n" +
+  sc("Aap kisi bhi channel me is bot (") + "<code>" + botUser + "</code>" + sc(") ko") + " <b>" + sc("Administrator") + "</b> " + sc("banayein, bot automatically yahan jud jayega aur aapko notification aayega!") + "\n\n" +
+  "⚠️ <i>" + sc("Agar bot ko kisi channel se hata diya jata hai, to wo automatically yahan se gayab ho jayega.") + "</i>";
 
 var d = new Date();
 var timeStr = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2);
@@ -146,7 +146,7 @@ if (isCb) {
       on_error: "/ignore"
     });
     return;
-  } catch (e) {}
+  } catch (e) { }
 }
 
 Api.sendMessage({
