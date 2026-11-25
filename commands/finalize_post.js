@@ -27,9 +27,14 @@ var markupRows = [];
 var curRow = [];
 for (var i = 0; i < (data.buttons || []).length; i++) {
   var btn = data.buttons[i];
+  if (!btn || !btn.url || !btn.url.trim()) continue;
+  var btnUrl = btn.url.trim();
+  if (btnUrl.indexOf("http://") !== 0 && btnUrl.indexOf("https://") !== 0 && btnUrl.indexOf("tg://") !== 0) {
+    btnUrl = "https://" + btnUrl;
+  }
   var btnObj = {
     text: btn.name || "Button",
-    url: btn.url
+    url: btnUrl
   };
   if (btn.icon_custom_emoji_id) {
     btnObj.icon_custom_emoji_id = btn.icon_custom_emoji_id;

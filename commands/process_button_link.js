@@ -48,6 +48,10 @@ if (url.indexOf("http://") !== 0 && url.indexOf("https://") !== 0 && url.indexOf
   return;
 }
 
+if (url.indexOf("t.me/") === 0) {
+  url = "https://" + url;
+}
+
 User.setProperty("current_btn_url", url, "string");
 
 var colorMarkup = {

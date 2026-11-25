@@ -28,7 +28,19 @@ if (typeof request !== "undefined" && request && request.id) {
 }
 
 var name = User.getProperty("current_btn_name") || "Button";
-var url = User.getProperty("current_btn_url") || "";
+var rawUrl = (User.getProperty("current_btn_url") || "").trim();
+if (!rawUrl) {
+  Api.sendMessage({
+    chat_id: chat.chatid,
+    text: "<tg-emoji emoji-id='5870619152829386951'>❌</tg-emoji> <b>" + sc("Button link missing! Please provide a valid URL for the button.") + "</b>",
+    parse_mode: "html"
+  });
+  return;
+}
+var url = rawUrl;
+if (url.indexOf("http://") !== 0 && url.indexOf("https://") !== 0 && url.indexOf("tg://") !== 0) {
+  url = "https://" + url;
+}
 var iconId = User.getProperty("current_btn_icon") || "5870869476408299692";
 
 var btnDict = {
