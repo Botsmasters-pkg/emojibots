@@ -36,6 +36,7 @@ if (cm && cm.chat && cm.new_chat_member) {
     Bot.setProperty("user_left_" + cmUserId, true, "boolean");
     Bot.setProperty("user_left_ch_" + cmChatId + "_" + cmUserId, true, "boolean");
     Bot.setProperty("fsub_verified_" + cmUserId, false, "boolean");
+    Bot.setProperty("fsub_verified_fp_" + cmUserId, "", "string");
   } else if (nStatus === "member" || nStatus === "administrator" || nStatus === "creator") {
     Bot.setProperty("user_left_" + cmUserId, false, "boolean");
     Bot.setProperty("user_left_ch_" + cmChatId + "_" + cmUserId, false, "boolean");

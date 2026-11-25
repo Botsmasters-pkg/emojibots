@@ -26,7 +26,11 @@ for (var i = 0; i < rawMustJoin.length; i++) {
 }
 
 if (!mustJoin || mustJoin.length === 0) {
+  var currentFp = Libs.emojiHelper.getChannelsFingerprint(mustJoin);
   User.setProperty("fsub_verified", true, "boolean");
+  User.setProperty("fsub_verified_fp", currentFp, "string");
+  Bot.setProperty("fsub_verified_" + user.telegramid, true, "boolean");
+  Bot.setProperty("fsub_verified_fp_" + user.telegramid, currentFp, "string");
   Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
   Bot.runCommand("back_to_main");
   return;

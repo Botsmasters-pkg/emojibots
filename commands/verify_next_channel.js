@@ -28,8 +28,12 @@ User.setProperty("fsub_index", idx, "integer");
 
 // If all channels verified
 if (idx >= mustJoin.length) {
+  var currentFp = Libs.emojiHelper.getChannelsFingerprint(mustJoin);
   User.setProperty("fsub_index", 0, "integer");
   User.setProperty("fsub_verified", true, "boolean");
+  User.setProperty("fsub_verified_fp", currentFp, "string");
+  Bot.setProperty("fsub_verified_" + user.telegramid, true, "boolean");
+  Bot.setProperty("fsub_verified_fp_" + user.telegramid, currentFp, "string");
   Bot.setProperty("user_left_" + user.telegramid, false, "boolean");
 
   var successMsg = "<tg-emoji emoji-id='6154718341672997377'>✔</tg-emoji> <b>" + sc("VERIFICATION SUCCESSFUL! ALL CHANNELS JOINED SUCCESSFULLY. PLEASE USE THE MENU BELOW.") + "</b>";

@@ -1,90 +1,143 @@
-/*LIB
-  name: emojiHelper
-  help: Small caps font converter, animated custom emoji transformer, and stylish inline keyboards
-LIB*/
-
 var DEFAULT_MUST_JOIN = [];
 
-var DEFAULT_TEXT_EMOJIS = [
-  "5303040006347046717", "5303548912726982102", "6154631793787015439", "5870568528049868382", 
-  "6154603635981423575", "5267394977540889773", "5870619152829386951", "6154729229415093721", 
-  "6154590274338166128", "6154565990593073474", "6154314868150243661", "6154659543570714696", 
-  "6154635564768300782", "5267102967009402987", "5303178192624823421", "5337310516769467285"
-];
+var DEFAULT_TEXT_EMOJIS = {};
 
-var DEFAULT_BUTTON_EMOJIS = [
-  "5213285132709929474", "5303040006347046717", "6154631793787015439", "5870568528049868382", 
-  "6154729229415093721", "6154635564768300782", "6154718341672997377"
-];
+var DEFAULT_BUTTON_EMOJIS = {};
 
-function sc(text) {
-  if (!text) return "";
-  var normal = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  var small  = "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ0123456789";
+function sc(str) {
+  if (!str) return "";
+  var normal = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var smallCaps = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢABCDEFGHIJKLMNOPQRSTUVWXYZ";
   var res = "";
-  for (var i = 0; i < text.length; i++) {
-    var idx = normal.indexOf(text[i]);
-    res += (idx !== -1) ? small[idx] : text[i];
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charAt(i);
+    var idx = normal.indexOf(c);
+    res += (idx !== -1) ? smallCaps.charAt(idx) : c;
   }
   return res;
 }
 
 function generate_id() {
-  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  var result = "";
+  var chars = "0123456789";
+  var res = "";
   for (var i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+    res += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return result;
+  return res;
 }
 
-function is_emoji(charStr) {
-  var regex = /([\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|\uFE0F|\u200D)+/;
-  return regex.test(charStr);
+function is_emoji(char) {
+  var emojiRegex = /[\u{1F300}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/u;
+  return emojiRegex.test(char);
 }
 
-function processTextAndEmojis(inputText) {
-  if (!inputText) return "";
-  var emojiDb = Bot.getProperty("emoji_db") || {};
-  var pool = (emojiDb.text && emojiDb.text.length > 0) ? emojiDb.text : DEFAULT_TEXT_EMOJIS;
-  
-  var shuffled = pool.slice();
-  for (var i = shuffled.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = shuffled[i];
-    shuffled[i] = shuffled[j];
-    shuffled[j] = temp;
+function processTextAndEmojis(text) {
+  if (!text) return "";
+  var emojisDb = Bot.getProperty("custom_text_emojis") || DEFAULT_TEXT_EMOJIS;
+  var keys = Object.keys(emojisDb);
+  for (var i = 0; i < keys.length; i++) {
+    var emo = keys[i];
+    var customId = emojisDb[emo];
+    if (customId) {
+      var replacement = "<tg-emoji emoji-id='" + customId + "'>" + emo + "</tg-emoji>";
+      text = text.split(emo).join(replacement);
+    }
   }
-  
-  var poolIdx = 0;
-  var emojiRegex = /([\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|\uFE0F|\u200D)+/g;
-  
-  var processed = inputText.replace(emojiRegex, function(match) {
-    var randId = shuffled[poolIdx % shuffled.length];
-    poolIdx++;
-    return "<tg-emoji emoji-id='" + randId + "'>✨</tg-emoji>";
-  });
-  
-  return processed;
+  return text;
 }
 
-function main_menu(user_id) {
+function normalizeChannel(ch) {
+  if (!ch) return null;
+  if (typeof ch === "string") {
+    var raw = ch.trim();
+    if (raw.indexOf("https://t.me/+") === 0 || raw.indexOf("https://t.me/joinchat/") === 0) {
+      return {
+        id: raw,
+        title: "Private Channel",
+        url: raw,
+        type: "private"
+      };
+    }
+    var cleanHandle = raw.replace(/^https?:\/\/t\.me\//, "").replace(/^@/, "");
+    return {
+      id: "@" + cleanHandle,
+      title: "@" + cleanHandle,
+      url: "https://t.me/" + cleanHandle,
+      type: "public"
+    };
+  }
+  if (typeof ch === "object") {
+    var cType = ch.type || "public";
+    var cId = ch.id ? String(ch.id) : "";
+    var cTitle = ch.title || cId;
+    var cUrl = ch.url || "";
+    if (!cUrl && cId.indexOf("@") === 0) {
+      cUrl = "https://t.me/" + cId.replace("@", "");
+    }
+    return {
+      id: cId,
+      title: cTitle,
+      url: cUrl,
+      type: cType
+    };
+  }
+  return null;
+}
+
+function getChannelsFingerprint(mustJoin) {
+  if (!mustJoin || mustJoin.length === 0) return "";
+  var ids = [];
+  for (var i = 0; i < mustJoin.length; i++) {
+    var c = mustJoin[i];
+    if (c && c.id) ids.push(String(c.id).toLowerCase());
+  }
+  ids.sort();
+  return ids.join("|");
+}
+
+function isUserFsubVerified(telegramId, mustJoin) {
+  if (!mustJoin || mustJoin.length === 0) return true;
+  var currentFp = getChannelsFingerprint(mustJoin);
+  
+  // Check if user has left any channel
+  var userLeft = Bot.getProperty("user_left_" + telegramId);
+  if (userLeft) return false;
+  
+  // Check Bot-level override (set when chat_member detects leave)
+  var botVerified = Bot.getProperty("fsub_verified_" + telegramId);
+  if (botVerified === false) return false;
+  
+  // Check User-level verified status
+  var userVerified = User.getProperty("fsub_verified");
+  if (!userVerified) return false;
+  
+  // Check fingerprint match (ensures new channels require re-verification!)
+  var userFp = User.getProperty("fsub_verified_fp");
+  var botFp = Bot.getProperty("fsub_verified_fp_" + telegramId);
+  if (userFp !== currentFp && botFp !== currentFp) return false;
+  
+  return true;
+}
+
+function main_menu(userTelegramId) {
   var adminId = "8710308658";
   var rows = [
     [
-      { text: sc("MAKE POST"), callback_data: "menu_make_post", style: "success", icon_custom_emoji_id: "5303040006347046717" },
-      { text: sc("CONNECT CHANNELS"), callback_data: "menu_connect_channels", style: "primary", icon_custom_emoji_id: "5213285132709929474" }
+      { text: sc("MAKE POST"), callback_data: "menu_make_post", style: "success", icon_custom_emoji_id: "5337310516769467285" },
+      { text: sc("CONNECT CHANNELS"), callback_data: "menu_connect_channels", style: "primary", icon_custom_emoji_id: "6154631793787015439" }
     ],
     [
-      { text: sc("SEND TO CHANNEL"), callback_data: "menu_send_channel", style: "success", icon_custom_emoji_id: "5213285132709929474" },
-      { text: sc("INSTRUCTIONS"), callback_data: "menu_instructions", style: "primary", icon_custom_emoji_id: "6154314868150243661" }
+      { text: sc("SEND TO CHANNEL"), callback_data: "menu_send_channel", style: "success", icon_custom_emoji_id: "6154314868150243661" },
+      { text: sc("INSTRUCTIONS"), callback_data: "menu_instructions", style: "primary", icon_custom_emoji_id: "5429651785352501917" }
     ]
   ];
-  if (String(user_id) === adminId) {
+
+  if (String(userTelegramId) === adminId) {
     rows.push([
-      { text: sc("ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
+      { text: sc("👑 ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "6154611916678369390" }
     ]);
   }
+
   return { inline_keyboard: rows };
 }
 
@@ -92,12 +145,12 @@ function admin_keyboard() {
   return {
     inline_keyboard: [
       [
-        { text: sc("STATUS"), callback_data: "admin_status", style: "primary", icon_custom_emoji_id: "4956599758044005301" },
+        { text: sc("STATUS"), callback_data: "admin_status", style: "primary", icon_custom_emoji_id: "6154718341672997377" },
         { text: sc("BROADCAST"), callback_data: "admin_broadcast", style: "success", icon_custom_emoji_id: "6154631793787015439" }
       ],
       [
-        { text: sc("ADD TEXT EMOJI"), callback_data: "admin_add_text_emoji", style: "success", icon_custom_emoji_id: "6154718341672997377" },
-        { text: sc("ADD BTN EMOJI"), callback_data: "admin_add_btn_emoji", style: "success", icon_custom_emoji_id: "6154718341672997377" }
+        { text: sc("ADD TEXT EMOJI"), callback_data: "admin_add_text_emoji", style: "success", icon_custom_emoji_id: "5337310516769467285" },
+        { text: sc("ADD BTN EMOJI"), callback_data: "admin_add_btn_emoji", style: "success", icon_custom_emoji_id: "5337310516769467285" }
       ],
       [
         { text: sc("TEXT EMOJI LIST"), callback_data: "admin_list_text_emojis", style: "primary", icon_custom_emoji_id: "6154659543570714696" },
@@ -105,10 +158,10 @@ function admin_keyboard() {
       ],
       [
         { text: sc("REMOVE EMOJI"), callback_data: "admin_remove_emoji", style: "danger", icon_custom_emoji_id: "5870869476408299692" },
-        { text: sc("LIST CHANNELS"), callback_data: "admin_list_channels", style: "primary", icon_custom_emoji_id: "6154659543570714696" }
+        { text: sc("LIST CHANNELS"), callback_data: "admin_list_channels", style: "primary", icon_custom_emoji_id: "6154631793787015439" }
       ],
       [
-        { text: sc("ADD CHANNEL"), callback_data: "admin_add_channel", style: "success", icon_custom_emoji_id: "6154718341672997377" },
+        { text: sc("ADD CHANNEL"), callback_data: "admin_add_channel", style: "success", icon_custom_emoji_id: "6154631793787015439" },
         { text: sc("REMOVE CHANNEL"), callback_data: "admin_remove_channel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
       ],
       [
@@ -129,66 +182,26 @@ function admin_navigation_markup() {
   return {
     inline_keyboard: [
       [
-        { text: sc("STEP BACK"), callback_data: "menu_admin_panel", style: "primary", icon_custom_emoji_id: "6154631793787015439" },
+        { text: sc("STEP BACK"), callback_data: "admin_list_channels", style: "primary", icon_custom_emoji_id: "5303040006347046717" },
         { text: sc("MAIN MENU"), callback_data: "back_to_main", style: "success", icon_custom_emoji_id: "5303040006347046717" }
       ],
       [
-        { text: sc("ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "5870869476408299692" }
+        { text: sc("ADMIN PANEL"), callback_data: "menu_admin_panel", style: "danger", icon_custom_emoji_id: "6154611916678369390" }
       ]
     ]
   };
 }
 
-function normalizeChannel(ch) {
-  if (!ch) return null;
-  if (typeof ch === "string") {
-    var raw = ch.trim();
-    if (raw.indexOf("{") === 0) {
-      try {
-        var parsed = JSON.parse(raw);
-        return normalizeChannel(parsed);
-      } catch (e) {}
-    }
-    var isLink = raw.indexOf("http") === 0;
-    var username = raw.replace(/^@/, "").replace(/^https?:\/\/t\.me\//, "").replace(/\/$/, "");
-    var isId = (raw.indexOf("-100") === 0 || raw.indexOf("-") === 0);
-    return {
-      id: isId ? raw : (raw.indexOf("@") === 0 ? raw : ("@" + username)),
-      title: isId ? raw : (raw.indexOf("@") === 0 ? raw : ("@" + username)),
-      url: isLink ? raw : (isId ? "" : ("https://t.me/" + username)),
-      type: isId ? "private" : "public"
-    };
-  }
-  if (typeof ch === "object" && ch.id) {
-    var chId = String(ch.id).trim();
-    var chType = ch.type || (chId.indexOf("-100") === 0 ? "private" : "public");
-    var chUrl = ch.url ? String(ch.url).trim() : (chId.indexOf("@") === 0 ? ("https://t.me/" + chId.replace("@", "")) : "");
-    var chTitle = ch.title ? String(ch.title).trim() : chId;
-    return {
-      id: chId,
-      title: chTitle,
-      url: chUrl,
-      type: chType
-    };
-  }
-  return null;
-}
-
 function get_bot_username() {
-  var u = Bot.getProperty("bot_username");
-  if (u) return u;
-  if (typeof bot !== "undefined" && bot && bot.name) {
-    return "@" + bot.name.replace(/^@/, "");
-  }
-  return "@bot";
+  return Bot.getProperty("bot_username") || "PremiumEmojiRoBot";
 }
 
 function get_bot_title() {
-  return Bot.getProperty("bot_title") || (typeof bot !== "undefined" && bot && bot.name ? bot.name : "Toxic Bot");
+  return Bot.getProperty("bot_title") || "Toxic Advanced Emoji & Post Builder";
 }
 
 function get_bot_id() {
-  return Bot.getProperty("bot_telegram_id") || (typeof bot !== "undefined" && bot ? bot.id : null);
+  return Bot.getProperty("bot_telegram_id") || "";
 }
 
 function get_welcome_text() {
@@ -203,6 +216,8 @@ publish({
   is_emoji: is_emoji,
   processTextAndEmojis: processTextAndEmojis,
   normalizeChannel: normalizeChannel,
+  getChannelsFingerprint: getChannelsFingerprint,
+  isUserFsubVerified: isUserFsubVerified,
   main_menu: main_menu,
   admin_keyboard: admin_keyboard,
   admin_navigation_markup: admin_navigation_markup,

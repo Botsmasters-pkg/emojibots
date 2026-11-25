@@ -10,15 +10,19 @@
   group: 
 CMD*/
 
-var adminId = "8710308658";
 var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
-var hasChannels = rawMustJoin && rawMustJoin.length > 0;
-var isVerified = User.getProperty("fsub_verified");
-var userLeft = Bot.getProperty("user_left_" + user.telegramid);
+var mustJoin = [];
+for (var i = 0; i < rawMustJoin.length; i++) {
+  var norm = Libs.emojiHelper.normalizeChannel(rawMustJoin[i]);
+  if (norm) mustJoin.push(norm);
+}
 
-if (String(user.telegramid) !== adminId && hasChannels && (!isVerified || userLeft)) {
-  Bot.runCommand("show_force_join");
-  return;
+if (mustJoin && mustJoin.length > 0) {
+  var isVerified = Libs.emojiHelper.isUserFsubVerified(user.telegramid, mustJoin);
+  if (!isVerified) {
+    Bot.runCommand("show_force_join");
+    return;
+  }
 }
 
 var sc = Libs.emojiHelper.sc;

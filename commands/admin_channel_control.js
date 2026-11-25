@@ -25,27 +25,6 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
-// Clean up old hardcoded channels from database and controlled channels if present
-if (!Bot.getProperty("cleaned_hardcoded_defaults_v3")) {
-  var storedMJoin = Bot.getProperty("must_join");
-  if (Array.isArray(storedMJoin)) {
-    var cleanedMJoin = [];
-    for (var k = 0; k < storedMJoin.length; k++) {
-      var mItem = storedMJoin[k];
-      var mIdStr = (typeof mItem === "string") ? mItem : (mItem && mItem.id ? String(mItem.id) : "");
-      if (mIdStr.toLowerCase() !== "@botadminshere" && mIdStr.toLowerCase() !== "@toxic_adminn") {
-        cleanedMJoin.push(mItem);
-      }
-    }
-    Bot.setProperty("must_join", cleanedMJoin, "json");
-  }
-  delete ctrlChannels["@botadminshere"];
-  delete ctrlChannels["@TOXIC_ADMINN"];
-  delete ctrlChannels["@toxic_adminn"];
-  Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
-  Bot.setProperty("cleaned_hardcoded_defaults_v3", true, "boolean");
-}
-
 var mJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
 for (var m = 0; m < mJoin.length; m++) {
   var normCh = Libs.emojiHelper.normalizeChannel(mJoin[m]);

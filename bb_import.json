@@ -470,6 +470,11 @@
       "command": "verify_next_channel",
       "help": "Step-by-step verification worker with fresh execution context (handles unlimited channels)",
       "file": "commands/verify_next_channel.js"
+    },
+    {
+      "command": "/reset_fsub",
+      "help": "Reset FSub verification status to test force join",
+      "file": "commands/reset_fsub.js"
     }
   ]
 }
