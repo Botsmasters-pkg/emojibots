@@ -4,7 +4,7 @@
 **Branding:** `ᴛᴏxɪᴄ` (TOXIC)  
 **Developer Credit:** `@codevexa`  
 **Bot Admin ID:** `8710308658`  
-**Required Force Join Channels:** `@botadminshere`, `@TOXIC_ADMINN`  
+**Required Force Join Channels:** Configurable dynamically via Admin Panel (`must_join`)  
 
 ---
 

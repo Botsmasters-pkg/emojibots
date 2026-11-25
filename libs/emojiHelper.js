@@ -3,7 +3,7 @@
   help: Small caps font converter, animated custom emoji transformer, and stylish inline keyboards
 LIB*/
 
-var DEFAULT_MUST_JOIN = ["@botadminshere", "@TOXIC_ADMINN"];
+var DEFAULT_MUST_JOIN = [];
 
 var DEFAULT_TEXT_EMOJIS = [
   "5303040006347046717", "5303548912726982102", "6154631793787015439", "5870568528049868382", 

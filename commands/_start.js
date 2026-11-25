@@ -34,6 +34,23 @@ if (users.indexOf(user.telegramid) === -1) {
   Bot.setProperty("users", users, "json");
 }
 
+// Clean up old hardcoded channels from database if present
+if (!Bot.getProperty("cleaned_hardcoded_defaults_v3")) {
+  var storedMJoin = Bot.getProperty("must_join");
+  if (Array.isArray(storedMJoin)) {
+    var cleaned = [];
+    for (var k = 0; k < storedMJoin.length; k++) {
+      var item = storedMJoin[k];
+      var idStr = (typeof item === "string") ? item : (item && item.id ? String(item.id) : "");
+      if (idStr.toLowerCase() !== "@botadminshere" && idStr.toLowerCase() !== "@toxic_adminn") {
+        cleaned.push(item);
+      }
+    }
+    Bot.setProperty("must_join", cleaned, "json");
+  }
+  Bot.setProperty("cleaned_hardcoded_defaults_v3", true, "boolean");
+}
+
 var rawMustJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;
 var mustJoin = [];
 for (var i = 0; i < rawMustJoin.length; i++) {

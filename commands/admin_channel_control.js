@@ -25,32 +25,25 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
-// Auto-sync channels from user_channels and must_join if not present
-var uChannels = Bot.getProperty("user_channels") || {};
-for (var uKey in uChannels) {
-  var chList = uChannels[uKey] || [];
-  for (var k = 0; k < chList.length; k++) {
-    var cItem = chList[k];
-    var cKey = String(cItem.id || cItem);
-    if (!ctrlChannels[cKey]) {
-      var isUn = cKey.indexOf("@") === 0;
-      var lnk = isUn ? ("https://t.me/" + cKey.replace("@", "")) : ("https://t.me/c/" + cKey.replace(/^-100/, ""));
-      ctrlChannels[cKey] = {
-        id: cKey,
-        title: cItem.title || cKey,
-        username: isUn ? cKey : "",
-        link: lnk,
-        can_promote_members: true,
-        can_post_messages: true,
-        can_edit_messages: true,
-        can_delete_messages: true,
-        can_invite_users: true,
-        can_pin_messages: true,
-        can_change_info: true,
-        updated_at: new Date().toISOString()
-      };
+// Clean up old hardcoded channels from database and controlled channels if present
+if (!Bot.getProperty("cleaned_hardcoded_defaults_v3")) {
+  var storedMJoin = Bot.getProperty("must_join");
+  if (Array.isArray(storedMJoin)) {
+    var cleanedMJoin = [];
+    for (var k = 0; k < storedMJoin.length; k++) {
+      var mItem = storedMJoin[k];
+      var mIdStr = (typeof mItem === "string") ? mItem : (mItem && mItem.id ? String(mItem.id) : "");
+      if (mIdStr.toLowerCase() !== "@botadminshere" && mIdStr.toLowerCase() !== "@toxic_adminn") {
+        cleanedMJoin.push(mItem);
+      }
     }
+    Bot.setProperty("must_join", cleanedMJoin, "json");
   }
+  delete ctrlChannels["@botadminshere"];
+  delete ctrlChannels["@TOXIC_ADMINN"];
+  delete ctrlChannels["@toxic_adminn"];
+  Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+  Bot.setProperty("cleaned_hardcoded_defaults_v3", true, "boolean");
 }
 
 var mJoin = Bot.getProperty("must_join") || Libs.emojiHelper.DEFAULT_MUST_JOIN;

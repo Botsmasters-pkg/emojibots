@@ -6,10 +6,7 @@
   "developer": "@codevexa",
   "branding": "ᴛᴏxɪᴄ",
   "description": "1:1 Exact Port of Toxic Advanced Emoji & Post Builder Bot for Bots.Business Git-Sync with Animated Custom Emojis (<tg-emoji>), Inline Button Styles (primary, success, danger), Custom Emoji Icons on Buttons, Strict Channel Administrator Check with Dynamic Re-verify, Multi-Channel Force Join, and Full Admin Management Suite.",
-  "must_join": [
-    "@botadminshere",
-    "@TOXIC_ADMINN"
-  ],
+  "must_join": [],
   "libraries": [
     {
       "name": "emojiHelper",

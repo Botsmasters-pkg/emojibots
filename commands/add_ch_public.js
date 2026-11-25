@@ -22,8 +22,8 @@ var text = "<tg-emoji emoji-id='6154631793787015439'>🌐</tg-emoji> <b>" + sc("
   "━━━━━━━━━━━━━━━━━━━━━━\n" +
   sc("Please send the Public Channel Username or Link:") + "\n\n" +
   "<b>" + sc("Examples:") + "</b>\n" +
-  "• <code>@botadminshere</code>\n" +
-  "• <code>https://t.me/TOXIC_ADMINN</code>\n\n" +
+  "• <code>@MyChannel</code>\n" +
+  "• <code>https://t.me/MyChannel</code>\n\n" +
   "⚠️ <i>" + sc("Note: Bot must be added as Administrator in this channel!") + "</i>";
 
 Api.sendMessage({

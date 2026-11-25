@@ -15,7 +15,7 @@ if (!user) return;
 var ADMIN_ID = 8710308658;
 
 // ===== OFFICIAL CHANNEL =====
-var CHANNEL = "@botadminshere";
+var CHANNEL = Bot.getProperty("official_channel") || "";
 
 function escapeHtml(str) {
   if (!str) return "";
