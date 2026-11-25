@@ -206,8 +206,7 @@ function get_bot_id() {
 
 function get_welcome_text() {
   return "<tg-emoji emoji-id='6154611916678369390'>👑</tg-emoji> <b>" + sc("WELCOME TO TOXIC PREMIUM EMOJI & POST BUILDER BOT!") + "</b>\n\n" +
-    "<b>" + sc("Is bot ki madad se aap apne normal text emojis ko high-quality animated custom emojis me badal sakte hain, aur khubsurat inline buttons wale posts bana kar apne channels par publish kar sakte hain.") + "</b>\n\n" +
-    "<b>" + sc("Neeche diye gaye main menu se apna kaam shuru karein:") + "</b>";
+    "👉 <i>" + sc("Neeche diye gaye main menu se apna kaam shuru karein:") + "</i>";
 }
 
 publish({
