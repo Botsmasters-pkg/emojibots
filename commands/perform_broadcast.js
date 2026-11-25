@@ -28,20 +28,26 @@ for (var i = 0; i < users.length; i++) {
         chat_id: users[i],
         photo: request.photo[request.photo.length - 1].file_id,
         caption: request.caption || "",
-        parse_mode: "html"
+        parse_mode: "html",
+        on_error: "/onBroadcastError",
+        bb_options: { target_user_id: users[i] }
       });
     } else if (request && request.video && request.video.file_id) {
       Api.sendVideo({
         chat_id: users[i],
         video: request.video.file_id,
         caption: request.caption || "",
-        parse_mode: "html"
+        parse_mode: "html",
+        on_error: "/onBroadcastError",
+        bb_options: { target_user_id: users[i] }
       });
     } else {
       Api.sendMessage({
         chat_id: users[i],
         text: message,
-        parse_mode: "html"
+        parse_mode: "html",
+        on_error: "/onBroadcastError",
+        bb_options: { target_user_id: users[i] }
       });
     }
     success++;

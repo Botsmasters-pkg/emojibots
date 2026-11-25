@@ -190,6 +190,11 @@
       "file": "commands/perform_broadcast.js"
     },
     {
+      "command": "/onBroadcastError",
+      "help": "Silently handle broadcast delivery errors and clean blocked users",
+      "file": "commands/onBroadcastError.js"
+    },
+    {
       "command": "admin_add_text_emoji",
       "help": "Prompt new text emoji IDs",
       "file": "commands/admin_add_text_emoji.js"
