@@ -15,7 +15,12 @@ var adminId = "8710308658";
 if (String(user.telegramid) !== adminId) return;
 
 if (typeof request !== "undefined" && request && request.id) {
-  try { Api.answerCallbackQuery({ callback_query_id: request.id }); } catch (e) {}
+  try {
+    Api.answerCallbackQuery({
+      callback_query_id: request.id,
+      text: "🔄 Channels list refreshed!"
+    });
+  } catch (e) {}
 }
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
@@ -120,9 +125,13 @@ var channelCountText = chKeys.length > 0
     sc("Aap kisi bhi channel me is bot (") + "<code>" + botUser + "</code>" + sc(") ko") + " <b>" + sc("Administrator") + "</b> " + sc("banayein, bot automatically yahan jud jayega aur aapko notification aayega!") + "\n\n" +
     "⚠️ <i>" + sc("Agar bot ko kisi channel se hata diya jata hai, to wo automatically yahan se gayab ho jayega.") + "</i>";
 
+var d = new Date();
+var timeStr = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2);
+
 var text = "<tg-emoji emoji-id='6154611916678369390'>📡</tg-emoji> <b>" + sc("CHANNEL CONTROL MANAGEMENT PANEL:") + "</b>\n" +
   "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-  channelCountText;
+  channelCountText +
+  "\n\n⏱ <i>" + sc("Last Synced:") + " " + timeStr + "</i>";
 
 var isCb = typeof request !== "undefined" && request && request.message && request.message.message_id;
 if (isCb) {
@@ -133,7 +142,8 @@ if (isCb) {
       text: text,
       parse_mode: "html",
       disable_web_page_preview: true,
-      reply_markup: { inline_keyboard: rows }
+      reply_markup: { inline_keyboard: rows },
+      on_error: "/ignore"
     });
     return;
   } catch (e) {}

@@ -91,10 +91,6 @@
     { "command": "ctrl_act_delete", "help": "Prompt post link or ID to delete", "file": "commands/ctrl_act_delete.js" },
     { "command": "/ctrl_process_delete", "help": "Execute delete message from channel", "file": "commands/ctrl_process_delete.js" },
     { "command": "/onCtrlDeleteDone", "help": "Delete message result callback", "file": "commands/onCtrlDeleteDone.js" },
-    { "command": "ctrl_add_ch_prompt", "help": "Prompt admin to connect channel to Channel Control", "file": "commands/ctrl_add_ch_prompt.js" },
-    { "command": "/ctrl_process_add_ch", "help": "Process channel username/forward to add to Channel Control", "file": "commands/ctrl_process_add_ch.js" },
-    { "command": "/onCtrlAddChVerify", "help": "Callback verifying bot admin rights when adding channel", "file": "commands/onCtrlAddChVerify.js" },
-    { "command": "/onEnsureWebhookAllowedUpdates", "help": "Ensure webhook allowed updates includes my_chat_member", "file": "commands/onEnsureWebhookAllowedUpdates.js" },
     { "command": "admin_clean_db", "help": "Clear temporary posts database", "file": "commands/admin_clean_db.js" },
     { "command": "admin_export_users", "help": "Export registered user IDs list", "file": "commands/admin_export_users.js" },
     { "command": "/onSyncBotIdentity", "help": "Background handler to auto-detect bot username, title, and ID from token", "file": "commands/onSyncBotIdentity.js" },
@@ -104,6 +100,7 @@
     { "command": "ctrl_add_ch_prompt", "help": "Prompt admin to connect / add a channel to Channel Control", "file": "commands/ctrl_add_ch_prompt.js" },
     { "command": "/ctrl_process_add_ch", "help": "Process channel username, link, or forwarded post to add to Channel Control", "file": "commands/ctrl_process_add_ch.js" },
     { "command": "/onCtrlAddChVerify", "help": "Callback verifying bot admin rights when adding channel to Channel Control", "file": "commands/onCtrlAddChVerify.js" },
+    { "command": "/ignore", "help": "Silent error sink for harmless Telegram API notices", "file": "commands/ignore.js" },
     { "command": "/41", "aliases": "41, /clone, clone", "help": "Clone and install bot to user Bots.Business email", "file": "commands/_41.js" },
     { "command": "*", "help": "Catch-all command for dynamic send routing", "file": "commands/_catchAll.js" }
   ]

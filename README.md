@@ -67,7 +67,7 @@ All features from the Python script have been reproduced in Bots.Business BJS fo
    - Go to your bot settings ➡️ **Git**.
    - Connect your GitHub repository.
    - Tap **Sync**.
-3. All 85 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
+3. All 86 commands in `commands/` and the `emojiHelper` library in `libs/` will be imported automatically!
 
 ---
 👨‍💻 **Developer:** [@codevexa](https://t.me/codevexa)  
