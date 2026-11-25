@@ -56,10 +56,18 @@ Api.sendMessage({
   parse_mode: "html"
 });
 
-if (data.photo_id) {
+if (data.media_type === "video" || data.video_id) {
+  Api.sendVideo({
+    chat_id: chat.chatid,
+    video: data.video_id || data.media_id,
+    caption: data.content,
+    parse_mode: "html",
+    reply_markup: replyMarkup
+  });
+} else if (data.media_type === "photo" || data.photo_id) {
   Api.sendPhoto({
     chat_id: chat.chatid,
-    photo: data.photo_id,
+    photo: data.photo_id || data.media_id,
     caption: data.content,
     parse_mode: "html",
     reply_markup: replyMarkup

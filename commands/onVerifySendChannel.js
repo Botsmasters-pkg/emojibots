@@ -96,10 +96,18 @@ if (curRow.length > 0) {
 }
 var postMarkup = (markupRows.length > 0) ? { inline_keyboard: markupRows } : undefined;
 
-if (data.photo_id) {
+if (data.media_type === "video" || data.video_id) {
+  Api.sendVideo({
+    chat_id: cid,
+    video: data.video_id || data.media_id,
+    caption: data.content,
+    parse_mode: "html",
+    reply_markup: postMarkup
+  });
+} else if (data.media_type === "photo" || data.photo_id) {
   Api.sendPhoto({
     chat_id: cid,
-    photo: data.photo_id,
+    photo: data.photo_id || data.media_id,
     caption: data.content,
     parse_mode: "html",
     reply_markup: postMarkup

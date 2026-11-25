@@ -25,7 +25,10 @@ User.setProperty("current_post_data", {
   id: Libs.emojiHelper.generate_id(),
   content: processed,
   buttons: [],
-  photo_id: null
+  media_type: null,
+  media_id: null,
+  photo_id: null,
+  video_id: null
 }, "json");
 
 var markup = {
@@ -37,7 +40,7 @@ var markup = {
   ]
 };
 
-var promptMedia = "<tg-emoji emoji-id='6154635564768300782'>📌</tg-emoji> <b>" + sc("DO YOU WANT TO ATTACH AN IMAGE MEDIA TO YOUR POST?") + "</b>";
+var promptMedia = "<tg-emoji emoji-id='6154635564768300782'>📌</tg-emoji> <b>" + sc("DO YOU WANT TO ATTACH MEDIA (IMAGE OR VIDEO) TO YOUR POST?") + "</b>";
 
 Api.sendMessage({
   chat_id: chat.chatid,

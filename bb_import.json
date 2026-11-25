@@ -61,7 +61,7 @@
     },
     {
       "command": "/save_photo_only",
-      "help": "Save uploaded photo",
+      "help": "Save uploaded photo or video media",
       "file": "commands/save_photo_only.js"
     },
     {

@@ -29,6 +29,13 @@ for (var i = 0; i < users.length; i++) {
         caption: request.caption || "",
         parse_mode: "html"
       });
+    } else if (request && request.video && request.video.file_id) {
+      Api.sendVideo({
+        chat_id: users[i],
+        video: request.video.file_id,
+        caption: request.caption || "",
+        parse_mode: "html"
+      });
     } else {
       Api.sendMessage({
         chat_id: users[i],
