@@ -68,11 +68,9 @@ if (isMember) {
 // Stop checking, show alert and channel buttons
 if (typeof request !== "undefined" && request && request.id) {
   try {
-    var missingName = currentCh ? (currentCh.title || currentCh.id) : "";
-    var alertText = missingName ? (sc("PLEASE JOIN: ") + missingName) : sc("HAVEN'T JOINED YET! PLEASE JOIN ALL CHANNELS.");
     Api.answerCallbackQuery({
       callback_query_id: request.id,
-      text: alertText,
+      text: sc("HAVEN'T JOINED YET! PLEASE JOIN ALL CHANNELS."),
       show_alert: true
     });
   } catch (e) {}
