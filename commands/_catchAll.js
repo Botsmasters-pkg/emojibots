@@ -88,26 +88,6 @@ if (mcm && mcm.chat && mcm.new_chat_member) {
         }
       });
     } catch (e) {}
-  } else {
-    if (ctrlChannels[cId]) {
-      delete ctrlChannels[cId];
-      Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
-
-      var removeNotice = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT REMOVED FROM CHANNEL ADMIN!") + "</b>\n" +
-                         "━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-                         "📢 <b>" + sc("Channel:") + "</b> <b>" + cTitle + "</b>\n" +
-                         "🆔 <b>" + sc("Chat ID:") + "</b> <code>" + cId + "</code>\n\n" +
-                         "━━━━━━━━━━━━━━━━━━━━━━\n" +
-                         "<i>" + sc("Yeh channel Channel Control panel se automatically remove kar diya gaya hai.") + "</i>";
-
-      try {
-        Api.sendMessage({
-          chat_id: ADMIN_ID,
-          text: removeNotice,
-          parse_mode: "html"
-        });
-      } catch (e) {}
-    }
   }
   return;
 }
