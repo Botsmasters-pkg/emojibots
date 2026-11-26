@@ -26,55 +26,54 @@ if (typeof request !== "undefined" && request && request.id) {
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
-// Filter & purge any unverified channels (removes legacy non-admin/must_join channels)
+// Gather all candidate channels (from bot_controlled_channels + user_channels)
+var candidateMap = {};
+for (var cid in ctrlChannels) {
+  if (cid) candidateMap[String(cid)] = ctrlChannels[cid].title || cid;
+}
+
+var userChannels = Bot.getProperty("user_channels") || {};
+for (var uid in userChannels) {
+  var uList = userChannels[uid] || [];
+  for (var u = 0; u < uList.length; u++) {
+    var uCh = uList[u];
+    if (uCh && uCh.id) {
+      candidateMap[String(uCh.id)] = uCh.title || uCh.id;
+    }
+  }
+}
+
+// Live audit candidate channels with Telegram API
+// Any channel where bot is confirmed admin will be kept/restored in bot_controlled_channels
+// Any channel where bot is NOT admin (or was removed) will be purged immediately
+var botTgId = Libs.emojiHelper.get_bot_id() || bot.id;
+var candKeys = Object.keys(candidateMap);
+for (var a = 0; a < candKeys.length; a++) {
+  var targetCid = candKeys[a];
+  try {
+    Api.getChatMember({
+      chat_id: targetCid,
+      user_id: botTgId,
+      on_result: "/onCtrlAuditResult",
+      on_error: "/onCtrlAuditResult",
+      bb_options: { audit_chat_id: targetCid, audit_title: candidateMap[targetCid] }
+    });
+  } catch (err) {}
+}
+
+// Build buttons list of active channels currently in ctrlChannels
 var chKeys = Object.keys(ctrlChannels);
-var hasChanges = false;
-var verifiedKeys = [];
-
-for (var i = 0; i < chKeys.length; i++) {
-  var cid = chKeys[i];
-  var cObj = ctrlChannels[cid];
-  if (!cObj || cObj.is_verified !== true) {
-    delete ctrlChannels[cid];
-    hasChanges = true;
-  } else {
-    verifiedKeys.push(cid);
-  }
-}
-
-if (hasChanges) {
-  Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
-}
-
-// Background audit: verify that bot is still an active admin in all verified channels
-if (verifiedKeys.length > 0) {
-  var botTgId = Libs.emojiHelper.get_bot_id() || bot.id;
-  for (var a = 0; a < verifiedKeys.length; a++) {
-    var vCid = verifiedKeys[a];
-    try {
-      Api.getChatMember({
-        chat_id: vCid,
-        user_id: botTgId,
-        on_result: "/onCtrlAuditResult",
-        on_error: "/onCtrlAuditResult",
-        bb_options: { audit_chat_id: vCid }
-      });
-    } catch (err) {}
-  }
-}
-
-// Build buttons list of verified active channels only
 var rows = [];
 var row = [];
 
-for (var j = 0; j < verifiedKeys.length; j++) {
-  var vId = verifiedKeys[j];
-  var vObj = ctrlChannels[vId];
-  var title = (vObj && vObj.title) ? vObj.title : ("Channel (" + vId.slice(-4) + ")");
+for (var i = 0; i < chKeys.length; i++) {
+  var chId = chKeys[i];
+  var cObj = ctrlChannels[chId];
+  var title = (cObj && cObj.title) ? cObj.title : ("Channel (" + chId.slice(-4) + ")");
 
   row.push({
     text: "📢 " + title,
-    callback_data: "ctrl_ch_" + vId,
+    callback_data: "ctrl_ch_" + chId,
     style: "primary",
     icon_custom_emoji_id: "6154631793787015439"
   });
@@ -100,8 +99,8 @@ rows.push([
 
 var botUser = Libs.emojiHelper.get_bot_username();
 
-var channelCountText = verifiedKeys.length > 0
-  ? "<b>" + sc("Connected Channels:") + "</b> <code>" + verifiedKeys.length + "</code>\n\n" + sc("Kisi bhi channel ko manage karne ke liye uske button par click karein:")
+var channelCountText = chKeys.length > 0
+  ? "<b>" + sc("Connected Channels:") + "</b> <code>" + chKeys.length + "</code>\n\n" + sc("Kisi bhi channel ko manage karne ke liye uske button par click karein:")
   : "<i>" + sc("Filhal koi channel controlled list me nahi hai.") + "</i>\n\n" +
   "💡 <b>" + sc("Yeh kaise kaam karta hai?") + "</b>\n" +
   sc("Aap kisi bhi channel me is bot (") + "<code>" + botUser + "</code>" + sc(") ko") + " <b>" + sc("Administrator") + "</b> " + sc("banayein, bot automatically yahan jud jayega aur aapko notification aayega!") + "\n\n" +
