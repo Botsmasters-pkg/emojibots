@@ -54,6 +54,8 @@ if (mcm && mcm.chat && mcm.new_chat_member) {
       title: cTitle,
       username: cUsername,
       link: cLink,
+      is_verified: true,
+      verified_at: new Date().toISOString(),
       can_promote_members: !!cNew.can_promote_members,
       can_post_messages: !!cNew.can_post_messages,
       can_edit_messages: !!cNew.can_edit_messages,

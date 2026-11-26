@@ -55,6 +55,8 @@ var canChange = !!member.can_change_info;
 if (!ctrlChannels[targetChatId]) {
   ctrlChannels[targetChatId] = { id: targetChatId };
 }
+ctrlChannels[targetChatId].is_verified = true;
+ctrlChannels[targetChatId].verified_at = new Date().toISOString();
 ctrlChannels[targetChatId].can_promote_members = canPromote;
 ctrlChannels[targetChatId].can_post_messages = canPost;
 ctrlChannels[targetChatId].can_edit_messages = canEdit;

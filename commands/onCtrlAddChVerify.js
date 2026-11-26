@@ -47,6 +47,8 @@ ctrlChannels[cleanId] = {
   title: targetTitle || cleanId,
   username: isUname ? cleanId : "",
   link: cLink,
+  is_verified: true,
+  verified_at: new Date().toISOString(),
   can_promote_members: !!member.can_promote_members,
   can_post_messages: !!member.can_post_messages,
   can_edit_messages: !!member.can_edit_messages,

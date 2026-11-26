@@ -19,26 +19,62 @@ if (typeof request !== "undefined" && request && request.id) {
   try {
     Api.answerCallbackQuery({
       callback_query_id: request.id,
-      text: "🔄 Channels list refreshed!"
+      text: "🔄 Syncing & refreshing channels list..."
     });
   } catch (e) { }
 }
 
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
-// Build buttons list of active channels
+// Filter & purge any unverified channels (removes legacy non-admin/must_join channels)
 var chKeys = Object.keys(ctrlChannels);
-var rows = [];
-var row = [];
+var hasChanges = false;
+var verifiedKeys = [];
 
 for (var i = 0; i < chKeys.length; i++) {
   var cid = chKeys[i];
   var cObj = ctrlChannels[cid];
-  var title = (cObj && cObj.title) ? cObj.title : ("Channel (" + cid.slice(-4) + ")");
+  if (!cObj || cObj.is_verified !== true) {
+    delete ctrlChannels[cid];
+    hasChanges = true;
+  } else {
+    verifiedKeys.push(cid);
+  }
+}
+
+if (hasChanges) {
+  Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+}
+
+// Background audit: verify that bot is still an active admin in all verified channels
+if (verifiedKeys.length > 0) {
+  var botTgId = Libs.emojiHelper.get_bot_id() || bot.id;
+  for (var a = 0; a < verifiedKeys.length; a++) {
+    var vCid = verifiedKeys[a];
+    try {
+      Api.getChatMember({
+        chat_id: vCid,
+        user_id: botTgId,
+        on_result: "/onCtrlAuditResult",
+        on_error: "/onCtrlAuditResult",
+        bb_options: { audit_chat_id: vCid }
+      });
+    } catch (err) {}
+  }
+}
+
+// Build buttons list of verified active channels only
+var rows = [];
+var row = [];
+
+for (var j = 0; j < verifiedKeys.length; j++) {
+  var vId = verifiedKeys[j];
+  var vObj = ctrlChannels[vId];
+  var title = (vObj && vObj.title) ? vObj.title : ("Channel (" + vId.slice(-4) + ")");
 
   row.push({
     text: "📢 " + title,
-    callback_data: "ctrl_ch_" + cid,
+    callback_data: "ctrl_ch_" + vId,
     style: "primary",
     icon_custom_emoji_id: "6154631793787015439"
   });
@@ -64,8 +100,8 @@ rows.push([
 
 var botUser = Libs.emojiHelper.get_bot_username();
 
-var channelCountText = chKeys.length > 0
-  ? "<b>" + sc("Connected Channels:") + "</b> <code>" + chKeys.length + "</code>\n\n" + sc("Kisi bhi channel ko manage karne ke liye uske button par click karein:")
+var channelCountText = verifiedKeys.length > 0
+  ? "<b>" + sc("Connected Channels:") + "</b> <code>" + verifiedKeys.length + "</code>\n\n" + sc("Kisi bhi channel ko manage karne ke liye uske button par click karein:")
   : "<i>" + sc("Filhal koi channel controlled list me nahi hai.") + "</i>\n\n" +
   "💡 <b>" + sc("Yeh kaise kaam karta hai?") + "</b>\n" +
   sc("Aap kisi bhi channel me is bot (") + "<code>" + botUser + "</code>" + sc(") ko") + " <b>" + sc("Administrator") + "</b> " + sc("banayein, bot automatically yahan jud jayega aur aapko notification aayega!") + "\n\n" +

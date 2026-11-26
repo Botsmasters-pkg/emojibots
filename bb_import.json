@@ -315,6 +315,11 @@
       "file": "commands/onCtrlVerifyBotAdmin.js"
     },
     {
+      "command": "/onCtrlAuditResult",
+      "help": "Background audit to remove channels where bot is no longer administrator",
+      "file": "commands/onCtrlAuditResult.js"
+    },
+    {
       "command": "ctrl_act_link",
       "help": "Export channel invite link",
       "file": "commands/ctrl_act_link.js"
