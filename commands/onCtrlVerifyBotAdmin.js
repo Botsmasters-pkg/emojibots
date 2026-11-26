@@ -20,18 +20,20 @@ var member = (typeof options !== "undefined" && options && options.result) ? opt
 var ctrlChannels = Bot.getProperty("bot_controlled_channels") || {};
 
 if (!member || member.status !== "administrator") {
-  // Do NOT delete channel! Only admin has the right to remove channels.
-  var notAdminAlert = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT IS CURRENTLY NOT ADMIN IN THIS CHANNEL") + "</b>\n\n" +
-                      sc("Bot ke paas is channel me admin permissions nahi hain. Channel ko list se nahi hataya gaya hai kyunki channel sirf admin hi remove kar sakta hai.");
+  // If bot is not administrator, remove immediately from Channel Control list so it is not shown
+  if (ctrlChannels[targetChatId]) {
+    delete ctrlChannels[targetChatId];
+    Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+  }
+
+  var notAdminAlert = "<tg-emoji emoji-id='5870869476408299692'>⚠️</tg-emoji> <b>" + sc("BOT IS NO LONGER ADMIN IN THIS CHANNEL") + "</b>\n\n" +
+                      sc("Bot is channel me ab Administrator nahi hai. Is channel ko Channel Control list se hata diya gaya hai.");
   Api.sendMessage({
     chat_id: chat.chatid,
     text: notAdminAlert,
     parse_mode: "html",
     reply_markup: {
       inline_keyboard: [
-        [
-          { text: sc("🔄 RE-VERIFY ADMIN"), callback_data: "ctrl_ch_" + targetChatId, style: "primary", icon_custom_emoji_id: "5303040006347046717" }
-        ],
         [
           { text: sc("🔙 BACK TO CHANNELS"), callback_data: "admin_channel_control", style: "primary", icon_custom_emoji_id: "5303040006347046717" }
         ]

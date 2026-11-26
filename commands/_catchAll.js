@@ -88,40 +88,14 @@ if (mcm && mcm.chat && mcm.new_chat_member) {
         }
       });
     } catch (e) {}
+  } else {
+    // If bot was removed or demoted from admin, immediately remove from Channel Control so it does NOT show
+    if (ctrlChannels[cId]) {
+      delete ctrlChannels[cId];
+      Bot.setProperty("bot_controlled_channels", ctrlChannels, "json");
+    }
   }
   return;
-}
-
-// Catch Telegram Channel Posts (channel_post)
-// Automatically registers any channel the bot is part of into Channel Control!
-var chPost = null;
-if (typeof request !== "undefined" && request && request.channel_post) chPost = request.channel_post;
-else if (typeof tgUpdate !== "undefined" && tgUpdate && tgUpdate.channel_post) chPost = tgUpdate.channel_post;
-
-if (chPost && chPost.chat) {
-  var cpChat = chPost.chat;
-  var cpId = String(cpChat.id);
-  var ctrlChs = Bot.getProperty("bot_controlled_channels") || {};
-  if (!ctrlChs[cpId]) {
-    var cpTitle = cpChat.title || cpChat.username || ("Channel (" + cpId.slice(-4) + ")");
-    var cpUname = cpChat.username ? ("@" + cpChat.username) : "";
-    var cpLnk = cpUname ? ("https://t.me/" + cpChat.username) : ("https://t.me/c/" + cpId.replace(/^-100/, ""));
-    ctrlChs[cpId] = {
-      id: cpId,
-      title: cpTitle,
-      username: cpUname,
-      link: cpLnk,
-      can_promote_members: true,
-      can_post_messages: true,
-      can_edit_messages: true,
-      can_delete_messages: true,
-      can_invite_users: true,
-      can_pin_messages: true,
-      can_change_info: true,
-      updated_at: new Date().toISOString()
-    };
-    Bot.setProperty("bot_controlled_channels", ctrlChs, "json");
-  }
 }
 
 // Catch Telegram Chat Join Requests (chat_join_request)

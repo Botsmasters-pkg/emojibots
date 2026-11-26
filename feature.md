@@ -200,9 +200,9 @@ sequenceDiagram
 5. **Real-Time Admin Status Check (`ctrl_act_status`):**
    - Bot ke paas us channel me kya-kya permissions hain (Post, Edit, Delete, Pin, Invite) uska live report dekh sakte hain.
 
-### ⚠️ Strict Security Rule:
-> **Bot Kisi Bhi Channel Ko Khud Se Delete Nahi Kar Sakta!**  
-> Bot ko kisi bhi channel ko automatically remove karne ka koi right nahi hai. Agar bot ko channel me admin se hata bhi diya jaye, tab bhi channel database me safe rahega. Channel ko remove karne ka adhikar **sirf aur sirf Admin** ke paas hai.
+### ⚠️ Active Admin Only Rule:
+> **Channel Control List Me Sirf Active Admin Channels Hi Show Honge!**  
+> Channel Control list me sirf wahi channels show hote hain jahan bot **present me confirmed Administrator** hai. Agar kisi channel se bot ko Admin post se remove ya demote kar diya jata hai, to wo channel automatically Channel Control list se gayab ho jayega aur list me show nahi hoga. Dobara admin banate hi channel automatically wapas Channel Control list me show hone lagega.
 
 ---
 
